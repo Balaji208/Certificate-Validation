@@ -86,7 +86,7 @@ const User = () => {
         </div>
         <div className="">
           <h1 className="text-2xl" >Not an user?
-            <NavLink to="/admin" className="text-green-500"> Click here to login as admin</NavLink>
+            <NavLink to="/login-admin" className="text-green-500"> Click here to login as admin</NavLink>
           </h1>
         </div>
         {/* Display Modal only if QR Code data is generated */}
