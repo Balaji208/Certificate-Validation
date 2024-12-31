@@ -1,0 +1,18 @@
+/* Apply background styles to the entire page */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background: #131710; /* Dark base background */
+  color: #f0f0f0; /* Light text color */
+  background-image: 
+    linear-gradient(to right, #202620 1px, transparent 1px),
+    linear-gradient(to bottom, #062a06 1px, transparent 1px);
+  background-size: 50px 50px; /* Adjust grid size */
+}
+
+
+/* Ensure the content takes at least the full height of the screen */
+.custom-background {
+  min-height: 100vh;
+}
