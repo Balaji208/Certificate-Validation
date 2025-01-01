@@ -16,3 +16,16 @@ html, body {
 .custom-background {
   min-height: 100vh;
 }
+/* Custom Scrollbar Style */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #4CAF50;
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background-color: #2c2c2c;
+}
