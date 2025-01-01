@@ -2,35 +2,35 @@ import { useState } from "react";
 import QRImageReader from "../components/QRImageReader";
 import { toast } from "react-toastify";
 import CustomModal from "../components/Modal";
-import QRScanner from "../components/QRScanner"; // Assuming this is your QR scanner component
+import QRScanner from "../components/QRScanner"; 
 import { NavLink } from "react-router-dom";
 const User = () => {
   const [qrCodeData, setQrCodeData] = useState("");
   const [open, setOpen] = useState(false);
-  const [scannerVisible, setScannerVisible] = useState(false); // State to toggle QR scanner
-  const [imageUploadVisible, setImageUploadVisible] = useState(false); // State for image upload button
+  const [scannerVisible, setScannerVisible] = useState(false); 
+  const [imageUploadVisible, setImageUploadVisible] = useState(false); 
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
   const handleButtonClickForScanner = () => {
-    setScannerVisible(true); // Show the QR scanner when Button 1 is clicked
-    setImageUploadVisible(false); // Hide image upload section
+    setScannerVisible(true); 
+    setImageUploadVisible(false); 
   };
 
   const handleButtonClickForImageUpload = () => {
     document.getElementById("file-input").click();
-    setImageUploadVisible(true); // Show the image upload section when Button 2 is clicked
-    setScannerVisible(false); // Hide QR scanner
+    setImageUploadVisible(true); 
+    setScannerVisible(false); 
   };
 
   const handleQRCodeData = (data) => {
     setQrCodeData(data);
     if (data) {
       toast.success(`QR Code Data: ${data}`);
-      handleOpen(); // Open the modal
+      handleOpen();
       if (scannerVisible) {
-        setScannerVisible(false); // Hide the QR scanner
+        setScannerVisible(false); 
       }
     }
   };

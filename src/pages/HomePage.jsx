@@ -1,34 +1,26 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import UserTable from "./UserTable";
 import NewUserModal from "./NewUserModal";
 
 const HomePage = () => {
-  const accounts = [
-    {
-      eventName: "Hackathon 2024",
-      eventDate: "2024-01-15",
-      email: "john.doe@example.com",
-      prize: "$500",
-      verified: true,
-    },
-    {
-      eventName: "AI Summit",
-      eventDate: "2024-02-10",
-      email: "jane.smith@example.com",
-      prize: "$1,000",
-      verified: false,
-    },
-    {
-      eventName: "Web3 Conference",
-      eventDate: "2024-03-20",
-      email: "mark.brown@example.com",
-      prize: "$750",
-      verified: false,
-    },
-  ];
-
+  const [accounts, setAccounts] = useState([]); // State for storing accounts
   const [showVerified, setShowVerified] = useState(true);
   const [showModal, setShowModal] = useState(false);
+
+  // Fetch accounts from the fake backend
+  useEffect(() => {
+    const fetchAccounts = async () => {
+      try {
+        const response = await fetch("http://localhost:5000/accounts");
+        const data = await response.json();
+        setAccounts(data);
+      } catch (error) {
+        console.error("Error fetching accounts:", error);
+      }
+    };
+
+    fetchAccounts();
+  }, []); // Runs once when the component mounts
 
   const toggleVerified = () => {
     setShowVerified(!showVerified);

@@ -1,15 +1,18 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
+import QRCode from "qrcode";
+import { jsPDF } from "jspdf";
 
 const UserTable = ({ accounts, showVerified }) => {
-  const [selectedEmails, setSelectedEmails] = useState([]);
+  const [selectUIDs, setSelectedUIDs] = useState([]);
+  const [isGenerating, setIsGenerating] = useState(false); // Added missing state
 
-  const handleSelectEmail = (email) => {
-    setSelectedEmails((prevSelectedEmails) => {
-      if (prevSelectedEmails.includes(email)) {
-        return prevSelectedEmails.filter((e) => e !== email);
+  const handleSelectEmail = (UID) => {
+    setSelectedUIDs((prevSelectedUIDs) => {
+      if (prevSelectedUIDs.includes(UID)) {
+        return prevSelectedUIDs.filter((e) => e !== UID);
       }
-      return [...prevSelectedEmails, email];
+      return [...prevSelectedUIDs, UID];
     });
   };
 
@@ -17,18 +20,78 @@ const UserTable = ({ accounts, showVerified }) => {
     (account) => account.verified === showVerified
   );
 
+  const handleGenerateQR = async () => {
+    try {
+      setIsGenerating(true);
+      
+      // Create a new PDF document
+      const pdf = new jsPDF();
+      const pageHeight = pdf.internal.pageSize.getHeight();
+      
+      // QR code size and spacing
+      const qrSize = 80;
+      const margin = 20;
+      const codesPerRow = 2;
+      const rowSpacing = 100;
+      
+      // Generate QR codes for each selected UID
+      for (let i = 0; i < selectUIDs.length; i++) {
+        const uid = selectUIDs[i];
+        
+        // Calculate position for this QR code
+        const row = Math.floor(i / codesPerRow);
+        const col = i % codesPerRow;
+        const x = margin + (col * (qrSize + margin));
+        const y = margin + (row * rowSpacing);
+        
+        // Add new page if needed
+        if (y + qrSize > pageHeight) {
+          pdf.addPage();
+        }
+        
+        // Generate QR code
+        const qrDataUrl = await QRCode.toDataURL(uid, {
+          width: qrSize,
+          margin: 1,
+          color: {
+            dark: '#000000',
+            light: '#ffffff',
+          },
+        });
+        
+        // Add QR code to PDF
+        pdf.addImage(qrDataUrl, 'PNG', x, y, qrSize, qrSize);
+        
+        // Add UID text below QR code
+        const account = accounts.find(acc => acc.unique_id === uid);
+        pdf.setFontSize(10);
+        pdf.text(
+          `UID: ${uid}\nEmail: ${account.email}\nEvent: ${account.eventName}`,
+          x,
+          y + qrSize + 10,
+          { maxWidth: qrSize }
+        );
+      }
+      
+      // Save the PDF
+      pdf.save(`qr_codes_${new Date().toISOString().slice(0,10)}.pdf`);
+      
+      setIsGenerating(false);
+    } catch (error) {
+      console.error('Error generating QR codes:', error);
+      setIsGenerating(false);
+      alert('Error generating QR codes. Please try again.'); // Added user-facing error message
+    }
+  };
+
   return (
     <div className="overflow-x-auto bg-gray-800/60 backdrop-blur-md rounded-lg shadow-xl">
       <table className="w-full text-left border-collapse">
         <thead className="bg-gray-800 text-gray-200 uppercase">
           <tr>
             <th className="px-6 py-3 border-b-2 border-gray-600">Select</th>
-            <th className="px-6 py-3 border-b-2 border-gray-600">
-              Event Name
-            </th>
-            <th className="px-6 py-3 border-b-2 border-gray-600">
-              Event Date
-            </th>
+            <th className="px-6 py-3 border-b-2 border-gray-600">Event Name</th>
+            <th className="px-6 py-3 border-b-2 border-gray-600">Event Date</th>
             <th className="px-6 py-3 border-b-2 border-gray-600">Email ID</th>
             <th className="px-6 py-3 border-b-2 border-gray-600">Prize</th>
           </tr>
@@ -44,8 +107,8 @@ const UserTable = ({ accounts, showVerified }) => {
                   <input
                     type="checkbox"
                     className="w-5 h-5 text-green-500 bg-gray-700 border-gray-600 rounded focus:ring-2 focus:ring-green-500"
-                    onChange={() => handleSelectEmail(account.email)}
-                    checked={selectedEmails.includes(account.email)}
+                    onChange={() => handleSelectEmail(account.unique_id)}
+                    checked={selectUIDs.includes(account.unique_id)}
                   />
                 )}
               </td>
@@ -60,14 +123,17 @@ const UserTable = ({ accounts, showVerified }) => {
         </tbody>
       </table>
 
-      {/* Generate QR button only visible if rows are selected */}
-      {selectedEmails.length > 0 && !showVerified && (
+      {selectUIDs.length > 0 && !showVerified && (
         <div className="m-4 flex justify-between flex-wrap">
-          <button className="font-bold p-3 mb-4 sm:mb-4 md:mb-4 bg-red-500 text-white rounded-lg">
+          <button className="font-bold p-3 mb-4 sm:mb-4 md:mb-4 lg:mb-0 bg-red-500 text-white rounded-lg">
             Delete Users
           </button>
-          <button className="font-bold p-3 bg-blue-500 text-white rounded-lg">
-            Generate QR
+          <button 
+            className={`font-bold p-3 ${isGenerating ? 'bg-blue-400' : 'bg-blue-500'} text-white rounded-lg`}
+            onClick={handleGenerateQR}
+            disabled={isGenerating}
+          >
+            {isGenerating ? 'Generating QR Codes...' : 'Generate QR'}
           </button>
         </div>
       )}
@@ -75,7 +141,6 @@ const UserTable = ({ accounts, showVerified }) => {
   );
 };
 
-// Prop validation using PropTypes
 UserTable.propTypes = {
   accounts: PropTypes.arrayOf(
     PropTypes.shape({
@@ -84,6 +149,7 @@ UserTable.propTypes = {
       email: PropTypes.string.isRequired,
       prize: PropTypes.string.isRequired,
       verified: PropTypes.bool.isRequired,
+      unique_id: PropTypes.string.isRequired, // Added missing prop type
     })
   ).isRequired,
   showVerified: PropTypes.bool.isRequired,

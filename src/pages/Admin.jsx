@@ -1,4 +1,5 @@
 const Admin = () => {
+  
   return (
     <div className="flex flex-col md:flex-row justify-center items-center h-screen ">
       {/* Left Side: Image */}

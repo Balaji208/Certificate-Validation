@@ -1,8 +1,35 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
-import { Modal, Box, Typography, Input, Button, FormHelperText, FormControl } from "@mui/joy";
+import {
+  Modal,
+  Box,
+  Typography,
+  Input,
+  Button,
+  FormHelperText,
+  FormControl,
+} from "@mui/joy";
 
-const NewUserModal = ({ isOpen, closeModal, addUser }) => {
+// Mock function to simulate adding a new user to db.json
+const addUserToDatabase = async (newUser) => {
+  try {
+    // Make a POST request to your backend or directly update your db.json
+    const response = await fetch("http://localhost:5000/accounts", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newUser),
+    });
+    if (!response.ok) throw new Error("Failed to add user");
+    const result = await response.json();
+    console.log("User added:", result);
+  } catch (error) {
+    console.error("Error adding user:", error);
+  }
+};
+
+const NewUserModal = ({ isOpen, closeModal }) => {
   const [formData, setFormData] = useState({
     eventName: "",
     eventDate: "",
@@ -19,6 +46,18 @@ const NewUserModal = ({ isOpen, closeModal, addUser }) => {
     prize: "",
   });
 
+  // Function to generate a 16-character unique ID
+  const generateUniqueId = () => {
+    const characters =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=";
+    let uniqueId = "";
+    for (let i = 0; i < 16; i++) {
+      uniqueId += characters.charAt(
+        Math.floor(Math.random() * characters.length)
+      );
+    }
+    return uniqueId;
+  };
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -26,7 +65,7 @@ const NewUserModal = ({ isOpen, closeModal, addUser }) => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Basic validation
@@ -35,14 +74,30 @@ const NewUserModal = ({ isOpen, closeModal, addUser }) => {
     if (!formData.eventName) formErrors.eventName = "Event name is required";
     if (!formData.eventDate) formErrors.eventDate = "Event date is required";
     if (!formData.email) formErrors.email = "Email is required";
-    if (!formData.phone) formErrors.phone = "Phone number is required";
     if (!formData.prize) formErrors.prize = "Prize is required";
 
     setErrors(formErrors);
 
     // If no errors, submit form
     if (Object.keys(formErrors).length === 0) {
-      addUser(formData);
+      const uniqueId = generateUniqueId(); // Generate a unique ID for "unique_id"
+
+      // Construct the new user object with the exact JSON format and order
+      const newUser = {
+        eventName: formData.eventName,
+        eventDate: formData.eventDate,
+        email: formData.email,
+        unique_id: uniqueId, // Unique ID as specified
+        prize: formData.prize,
+        verified: false, // Default to false
+      };
+
+      console.log("New User:", newUser);
+
+      // Call the function to save the new user data to db.json (or backend API)
+      await addUserToDatabase(newUser);
+
+      // Close the modal
       closeModal();
     }
   };
@@ -56,8 +111,8 @@ const NewUserModal = ({ isOpen, closeModal, addUser }) => {
     >
       <Box
         sx={{
-          width: "90%", // Adjust width for small screens
-          maxWidth: "450px", // Max width for larger screens
+          width: "90%",
+          maxWidth: "450px",
           margin: "auto",
           marginTop: "10vh",
           bgcolor: "linear-gradient(to right, #6a11cb, #2575fc, #000)",
@@ -71,137 +126,93 @@ const NewUserModal = ({ isOpen, closeModal, addUser }) => {
         <Typography
           variant="h5"
           gutterBottom
-          sx={{ color: "#32CD32", 
+          sx={{
+            color: "#32CD32",
             textAlign: "center",
-             fontWeight: 600,
-             fontSize: "1.5rem",
-             marginBottom: "50px"
-            }}
-          
+            fontWeight: 600,
+            fontSize: "1.5rem",
+            marginBottom: "50px",
+          }}
         >
           Add New User
         </Typography>
         <form onSubmit={handleSubmit} className="space-y-4">
-          <FormControl fullWidth error={Boolean(errors.eventName)}>
+          {/* Event Name */}
+          <FormControl fullwidth required error={!!errors.eventName}>
             <Input
-              label="Event Name"
               name="eventName"
               value={formData.eventName}
               onChange={handleChange}
-              sx={{
-                backgroundColor: "#333", // Dark input background
-                color: "#fff", // Light text
-                borderRadius: "8px",
-                boxShadow: "0 2px 10px rgba(0, 0, 0, 0.2)",
-                padding: "10px 15px",
-              }}
+              placeholder="Event Name"
+              type="text"
             />
-            {errors.eventName && <FormHelperText sx={{ color: "#f44336" }}>{errors.eventName}</FormHelperText>}
+            {errors.eventName && (
+              <FormHelperText>{errors.eventName}</FormHelperText>
+            )}
           </FormControl>
 
-          <FormControl fullWidth error={Boolean(errors.eventDate)}>
+          {/* Event Date */}
+          <FormControl fullwidth required error={!!errors.eventDate}>
             <Input
-              label="Event Date"
               name="eventDate"
-              type="date"
               value={formData.eventDate}
               onChange={handleChange}
-              inputProps={{ "aria-label": "Event Date" }}
-              sx={{
-                backgroundColor: "#333", // Dark input background
-                color: "#fff", // Light text
-                borderRadius: "8px",
-                boxShadow: "0 2px 10px rgba(0, 0, 0, 0.2)",
-                padding: "10px 15px",
-              }}
+              placeholder="Event Date"
+              type="date"
             />
-            {errors.eventDate && <FormHelperText sx={{ color: "#f44336" }}>{errors.eventDate}</FormHelperText>}
+            {errors.eventDate && (
+              <FormHelperText>{errors.eventDate}</FormHelperText>
+            )}
           </FormControl>
 
-          <FormControl fullWidth error={Boolean(errors.email)}>
+          {/* Email */}
+          <FormControl fullwidth required error={!!errors.email}>
             <Input
-              label="Email ID"
               name="email"
-              type="email"
               value={formData.email}
               onChange={handleChange}
-              sx={{
-                backgroundColor: "#333", // Dark input background
-                color: "#fff", // Light text
-                borderRadius: "8px",
-                boxShadow: "0 2px 10px rgba(0, 0, 0, 0.2)",
-                padding: "10px 15px",
-              }}
+              placeholder="Email"
+              type="email"
             />
-            {errors.email && <FormHelperText sx={{ color: "#f44336" }}>{errors.email}</FormHelperText>}
+            {errors.email && <FormHelperText>{errors.email}</FormHelperText>}
           </FormControl>
 
-          <FormControl fullWidth error={Boolean(errors.phone)}>
+          {/* Phone Number */}
+          <FormControl fullwidth required error={!!errors.phone}>
             <Input
-              label="Phone Number"
               name="phone"
               value={formData.phone}
               onChange={handleChange}
-              sx={{
-                backgroundColor: "#333", // Dark input background
-                color: "#fff", // Light text
-                borderRadius: "8px",
-                boxShadow: "0 2px 10px rgba(0, 0, 0, 0.2)",
-                padding: "10px 15px",
-              }}
+              placeholder="Phone"
+              type="tel"
             />
-            {errors.phone && <FormHelperText sx={{ color: "#f44336" }}>{errors.phone}</FormHelperText>}
+            {errors.phone && <FormHelperText>{errors.phone}</FormHelperText>}
           </FormControl>
 
-          <FormControl fullWidth error={Boolean(errors.prize)}>
+          {/* Prize */}
+          <FormControl fullwidth required error={!!errors.prize}>
             <Input
-              label="Prize"
               name="prize"
               value={formData.prize}
               onChange={handleChange}
-              sx={{
-                backgroundColor: "#333", // Dark input background
-                color: "#fff", // Light text
-                borderRadius: "8px",
-                boxShadow: "0 2px 10px rgba(0, 0, 0, 0.2)",
-                padding: "10px 15px",
-              }}
+              placeholder="Prize"
+              type="text"
             />
-            {errors.prize && <FormHelperText sx={{ color: "#f44336" }}>{errors.prize}</FormHelperText>}
+            {errors.prize && <FormHelperText>{errors.prize}</FormHelperText>}
           </FormControl>
 
-          <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 2 }}>
-            <Button
-              variant="outlined"
-              onClick={closeModal}
-              sx={{
-                textTransform: "none",
-                color: "#fff", // Light text color for button
-                borderColor: "#32CD32", // Green border
-                "&:hover": {
-                  backgroundColor: "#32CD32", // Green background on hover
-                  color: "#000", // Dark text color
-                  borderColor: "#32CD32",
-                },
-              }}
-            >
-              Cancel
-            </Button>
-            <Button
-              variant="contained"
-              type="submit"
-              sx={{
-                textTransform: "none",
-                backgroundColor: "#32CD32", // Green background for primary button
-                "&:hover": {
-                  backgroundColor: "#28a745", // Darker green on hover
-                },
-                
-              }}
-            >
-              Add User
-            </Button>
-          </Box>
+          <Button
+            type="submit"
+            sx={{
+              width: "100%",
+              bgcolor: "#32CD32",
+              color: "#fff",
+              fontWeight: "600",
+              padding: "12px",
+            }}
+          >
+            Add User
+          </Button>
         </form>
       </Box>
     </Modal>
@@ -211,7 +222,6 @@ const NewUserModal = ({ isOpen, closeModal, addUser }) => {
 NewUserModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   closeModal: PropTypes.func.isRequired,
-  addUser: PropTypes.func.isRequired,
 };
 
 export default NewUserModal;
