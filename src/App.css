@@ -1,16 +1,15 @@
 /* Apply background styles to the entire page */
-html, body {
+html,
+body {
   height: 100%;
   margin: 0;
   padding: 0;
-  background: #000000; /* Dark base background */
+  background: #131313; /* Dark base background */
   color: #f0f0f0; /* Light text color */
-  background-image: 
-    linear-gradient(to right, #171917 1px, transparent 1px),
-    linear-gradient(to bottom, #031803 1px, transparent 1px);
+  background-image: linear-gradient(to right, #1c1e1c 1px, transparent 1px),
+    linear-gradient(to bottom, #1c1e1c 1px, transparent 1px);
   background-size: 30px 30px; /* Adjust grid size */
 }
-
 
 /* Ensure the content takes at least the full height of the screen */
 .custom-background {
@@ -28,4 +27,24 @@ html, body {
 
 .custom-scrollbar::-webkit-scrollbar-track {
   background-color: #2c2c2c;
+}
+.toast-success-custom {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+  font-weight: bold !important;
+  border-radius: 8px !important;
+  border: 2px solid #1db954 !important; /* Optional: Add a green border */
+  padding: 12px !important;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2) !important;
+  text-align: center !important;
+}
+.toast-error-custom {
+  background-color: #d72d2d !important; /* Dark red background */
+  color: #ffffff !important; /* White text */
+  font-weight: bold !important;
+  border-radius: 8px !important;
+  border: 2px solid #ff0000 !important; /* Optional: Add a light red border */
+  padding: 12px !important;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2) !important;
+  text-align: center !important;
 }
