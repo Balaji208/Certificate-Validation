@@ -18,27 +18,31 @@ const QRScanner = ({ onQRCodeData }) => {
   };
 
   return (
-    <div className="text-center bg-[#0a0a0a] p-3 rounded-lg shadow-xl max-w-lg mx-auto text-white">
-      <h1 className="text-2xl mb-2 text-gradient bg-clip-text text-transparent bg-gradient-to-r from-[#b9e9b9] via-[#26ab26] to-[#66ff66]">QR Code Reader</h1>
-      <div className="mb-6 bg-[#1a1a1a] p-4 rounded-lg shadow-2xl">
-        <QrReader
-          onResult={(result, error) => {
-            if (result) {
-              handleScan(result);
-            }
-            if (error) {
-              handleError(error);
-            }
-          }}
-          constraints={{
-            facingMode: "environment", // Ensures the back camera is used
-          }}
-          className="w-full rounded-lg border-4 border-gradient-to-r from-[#00ff00] to-[#00cc00] transform transition-transform duration-500 ease-in-out hover:scale-105"
-        />
-      </div>
-     
-      {error && <p className="text-red-500 text-lg">Error: {error}</p>}
+    <div className="text-center bg-slate-950/80 backdrop-blur-xl p-6 rounded-xl shadow-2xl max-w-lg mx-auto border border-slate-800/50">
+    <h1 className="text-2xl font-bold mb-4 bg-gradient-to-r from-emerald-400 via-emerald-500 to-emerald-600 text-transparent bg-clip-text">
+      QR Code Reader
+    </h1>
+    
+    <div className="mb-6 bg-slate-900/90 p-4 rounded-lg shadow-2xl border border-emerald-500/20">
+      <QrReader
+        onResult={(result, error) => {
+          if (result) handleScan(result);
+          if (error) handleError(error);
+        }}
+        constraints={{
+          facingMode: "environment"
+        }}
+        className="w-full rounded-lg transform transition-all duration-300 ease-in-out hover:scale-102 
+        ring-2 ring-emerald-500/30 hover:ring-emerald-500/50"
+      />
     </div>
+    
+    {error && (
+      <p className="text-rose-500 text-lg font-medium bg-rose-500/10 py-2 px-4 rounded-lg">
+        Error: {error}
+      </p>
+    )}
+  </div>
   );
 };
 

@@ -1,83 +1,48 @@
-import { Modal, ModalDialog, ModalClose, Typography } from "@mui/joy";
-import { CalendarToday, Email, Phone, EmojiEvents, Event, CheckCircle } from "@mui/icons-material";
+import { Calendar, Mail, Phone, Trophy, X, Award } from 'lucide-react';
 import PropTypes from "prop-types";
 
 const CustomModal = ({ open, handleClose }) => {
   return (
     <div>
-      <Modal open={open} onClose={handleClose}>
-        <ModalDialog 
-          color="success"
-          layout="center"
-          size="lg"
-          variant="plain"
-          sx={{ 
-            width: '80%', // Adjust width
-            height: '80%', // Adjust height
-            maxWidth: '600px', // Set max width if needed
-            maxHeight: '80vh', // Set max height if needed
-            backgroundColor: 'black', // Black background for the modal
-            overflowY: 'auto', // Allow scrolling if content exceeds the height
-            padding: 2, // Adjust padding
-            color: 'white', // White text color for contrast
-          }}
-        >
-          <ModalClose onClick={handleClose} sx={{ color: 'white' }} />
-          
-          <Typography variant="h4" className="font-semibold text-lg">
-            Certificate validated
-          </Typography>
-
-          <Typography variant="body1" className="space-y-4">
-            <div className="flex flex-col bg-gray-800 p-6 rounded-xl shadow-lg space-y-4">
-              {/* Event Name */}
-              <div className="flex justify-between items-center">
-                <div className="flex items-center space-x-2">
-                  <Event className="text-indigo-500" />
-                  <h2 className="text-lg font-semibold">Event Name:</h2>
-                </div>
-                <h2 className="text-lg font-medium">XYZ</h2>
-              </div>
-
-              {/* Event Date */}
-              <div className="flex justify-between items-center">
-                <div className="flex items-center space-x-2">
-                  <CalendarToday className="text-green-500" />
-                  <h2 className="text-lg font-semibold">Event Date:</h2>
-                </div>
-                <h2 className="text-lg font-medium">XYZsddsfsf</h2>
-              </div>
-
-              {/* Email ID */}
-              <div className="flex justify-between items-center">
-                <div className="flex items-center space-x-2">
-                  <Email className="text-blue-500" />
-                  <h2 className="text-lg font-semibold">Email ID:</h2>
-                </div>
-                <h2 className="text-lg font-medium">XYZ</h2>
-              </div>
-
-              {/* Phone Number */}
-              <div className="flex justify-between items-center">
-                <div className="flex items-center space-x-2">
-                  <Phone className="text-teal-500" />
-                  <h2 className="text-lg font-semibold">Phone Number:</h2>
-                </div>
-                <h2 className="text-lg font-medium">XYZ</h2>
-              </div>
-
-              {/* Prize */}
-              <div className="flex justify-between items-center">
-                <div className="flex items-center space-x-2">
-                  <EmojiEvents className="text-yellow-500" /> 
-                  <h2 className="text-lg font-semibold">Prize:</h2>
-                </div>
-                <h2 className="text-lg font-medium">XYZ</h2>
-              </div>
-            </div>
-          </Typography>
-        </ModalDialog>
-      </Modal>
+      {/* Modal background */}
+      {open && (
+         <div className="fixed inset-0 flex justify-center items-center bg-zinc-900/80 backdrop-blur-sm">
+         <div className="bg-gradient-to-b from-zinc-900 to-zinc-950 w-full max-w-4xl h-full max-h-[80vh] p-8 rounded-xl overflow-auto shadow-2xl border border-zinc-800 relative custom-scrollbar">
+           <button
+             className="absolute top-4 right-4 p-2 text-zinc-400 hover:text-white transition-colors"
+             onClick={handleClose}
+           >
+             <X size={24} />
+           </button>
+     
+           <div className="text-center mb-8">
+             <h2 className="text-3xl font-bold bg-gradient-to-r from-emerald-400 to-emerald-600 bg-clip-text text-transparent">
+               Certificate Validated
+             </h2>
+           </div>
+     
+           <div className="space-y-4">
+             {[
+               { icon: Award, color: "text-indigo-500", label: "Event Name", value: "XYZ" },
+               { icon: Calendar, color: "text-emerald-500", label: "Event Date", value: "XYZsddsfsf" },
+               { icon: Mail, color: "text-sky-500", label: "Email ID", value: "XYZ" },
+               { icon: Phone, color: "text-teal-500", label: "Phone Number", value: "XYZ" },
+               { icon: Trophy, color: "text-amber-500", label: "Prize", value: "XYZ" }
+             ].map(({ icon: Icon, color, label, value }) => (
+               <div key={label} className="bg-gradient-to-r from-zinc-800 to-zinc-900 p-5 rounded-xl shadow-xl hover:scale-[1.02] transition-all duration-200">
+                 <div className="flex justify-between items-center">
+                   <div className="flex items-center space-x-3">
+                     <Icon className={`${color}`} size={24} />
+                     <h3 className="text-lg font-semibold text-zinc-200">{label}:</h3>
+                   </div>
+                   <h3 className="text-lg font-medium text-zinc-300">{value}</h3>
+                 </div>
+               </div>
+             ))}
+           </div>
+         </div>
+       </div>
+      )}
     </div>
   );
 };

@@ -19,6 +19,7 @@
     "axios": "^1.7.9",
     "jspdf": "^2.5.2",
     "jsqr": "^1.4.0",
+    "lucide-react": "^0.469.0",
     "postcss": "^8.4.49",
     "prop-types": "^15.8.1",
     "qrcode": "^1.5.4",

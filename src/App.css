@@ -3,12 +3,12 @@ html, body {
   height: 100%;
   margin: 0;
   padding: 0;
-  background: #131710; /* Dark base background */
+  background: #000000; /* Dark base background */
   color: #f0f0f0; /* Light text color */
   background-image: 
-    linear-gradient(to right, #202620 1px, transparent 1px),
-    linear-gradient(to bottom, #062a06 1px, transparent 1px);
-  background-size: 50px 50px; /* Adjust grid size */
+    linear-gradient(to right, #171917 1px, transparent 1px),
+    linear-gradient(to bottom, #031803 1px, transparent 1px);
+  background-size: 30px 30px; /* Adjust grid size */
 }
 
 
@@ -22,7 +22,7 @@ html, body {
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background-color: #4CAF50;
+  background-color: #2a8258;
   border-radius: 4px;
 }
 
