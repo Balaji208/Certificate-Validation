@@ -13,7 +13,10 @@ const User = () => {
   const [imageUploadVisible, setImageUploadVisible] = useState(false);
 
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleClose = () => {
+    setOpen(false);
+    setScannerVisible(false); // Ensure the scanner is stopped
+  };
 
   const handleButtonClickForScanner = () => {
     setScannerVisible(true);
@@ -25,10 +28,39 @@ const User = () => {
     setImageUploadVisible(true);
     setScannerVisible(false);
   };
-
+  
+  const handleQRCodeDataForScanner = (data) => {
+    if (data !== "Wrong Input") {
+      if (!open) {
+        setQrCodeData(data);
+  
+        toast.success(`Certificate Validated Successfully`, {
+          className: "toast-success-custom",
+          bodyClassName: "custom-toast-body",
+          progressClassName: "custom-progress-bar",
+        });
+  
+        handleOpen(); // Open modal only if it's not already open
+      }
+    } else {
+      toast.error("Invalid QR Code", {
+        className: "toast-error-custom",
+        position: toast.POSITION.TOP_CENTER,
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    }
+  };
+  
+  
   const handleQRCodeData = (data) => {
     setQrCodeData(data);
     if (data != "Wrong Input") {
+      
       toast.success(`Certificate Validated Successfully`, {
         className: "toast-success-custom",
         bodyClassName: "custom-toast-body", // Optional if you need body-specific styles
@@ -54,15 +86,18 @@ const User = () => {
 
   const handleValidate = () => {
     if (textInput.trim() === "") {
+  
       toast.error("Please enter a valid certification id to validate!", {
         className: "toast-error-custom",
       });
     } else {
+      setQrCodeData(textInput);
       toast.success(`Validated ID: ${textInput}`, {
         className: "toast-success-custom",
         bodyClassName: "custom-toast-body", // Optional if you need body-specific styles
         progressClassName: "custom-progress-bar", // Optional for progress bar styles
       });
+      handleOpen();
     }
   };
 
@@ -99,7 +134,9 @@ const User = () => {
           {/* QR Scanner */}
           {scannerVisible && (
             <div className="flex justify-center items-center w-full sm:w-3/4 md:w-1/2 h-auto mb-8">
-              <QRScanner onQRCodeData={handleQRCodeData} />
+              <QRScanner onQRCodeData={handleQRCodeDataForScanner}
+              onClose={() => setScannerVisible(false)}
+               />
             </div>
           )}
 

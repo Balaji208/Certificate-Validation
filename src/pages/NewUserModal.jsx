@@ -139,7 +139,7 @@ const NewUserModal = ({ isOpen, closeModal }) => {
     setIsSubmitting(false);
   };
 
-  if (!isOpen) return null; 
+  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-50 overflow-hidden">
@@ -293,9 +293,9 @@ const NewUserModal = ({ isOpen, closeModal }) => {
                             onChange={handleInputChange}
                             className={`${inputClasses} ${
                               formErrors[field] ? "border-red-400" : ""
-                            }
-                                  antialiased`}
+                            } [&::-webkit-calendar-picker-indicator]:filter-invert antialiased`}
                           />
+
                           {formErrors[field] && (
                             <p className="text-red-400 text-xs mt-1 animate-shake antialiased">
                               {formErrors[field]}

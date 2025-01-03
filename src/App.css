@@ -48,3 +48,7 @@ body {
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2) !important;
   text-align: center !important;
 }
+/* Add this CSS to your stylesheet */
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1); /* This will make the icon white */
+}
