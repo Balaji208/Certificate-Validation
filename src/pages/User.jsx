@@ -7,7 +7,7 @@ import { NavLink } from "react-router-dom";
 import { QrCode, Upload } from "lucide-react";
 const User = () => {
   const [qrCodeData, setQrCodeData] = useState("");
-  const [textInput, setTextInput] = useState(""); // State for the text input
+  const [textInput, setTextInput] = useState(""); 
   const [open, setOpen] = useState(false);
   const [scannerVisible, setScannerVisible] = useState(false);
   const [imageUploadVisible, setImageUploadVisible] = useState(false);
@@ -71,7 +71,7 @@ const User = () => {
       {/* Company Header - Fixed Position */}
       <div className="absolute  top-0 right-0 z-10 p-4 md:p-5 flex items-center gap-3">
         <img
-          src="/CTF-Logo.png"
+          src="/CTF.png"
           alt="Company Logo"
           className="w-8 h-8 md:w-12 md:h-9 object-contain"
         />
