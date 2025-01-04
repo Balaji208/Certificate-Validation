@@ -37,7 +37,7 @@ const Admin = () => {
             >
               <label
                 htmlFor="adminId"
-                className="block text-sm font-medium text-emerald-400 flex items-center gap-2"
+                className=" text-sm font-medium text-emerald-400 flex items-center gap-2"
               >
                 <User size={16} className="text-emerald-400" />
                 Admin ID
@@ -62,7 +62,7 @@ const Admin = () => {
             >
               <label
                 htmlFor="password"
-                className="block text-sm font-medium text-emerald-400 flex items-center gap-2"
+                className=" text-sm font-medium text-emerald-400 flex items-center gap-2"
               >
                 <LockKeyhole size={16} className="text-emerald-400" />
                 Password

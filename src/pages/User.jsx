@@ -1,22 +1,40 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import QRImageReader from "../components/QRImageReader";
 import { toast } from "react-toastify";
 import CustomModal from "../components/Modal";
 import QRScanner from "../components/QRScanner";
 import { NavLink } from "react-router-dom";
 import { QrCode, Upload } from "lucide-react";
+import "react-toastify/dist/ReactToastify.css";
+
 const User = () => {
   const [qrCodeData, setQrCodeData] = useState("");
-  const [textInput, setTextInput] = useState(""); 
+  const [textInput, setTextInput] = useState("");
   const [open, setOpen] = useState(false);
   const [scannerVisible, setScannerVisible] = useState(false);
   const [imageUploadVisible, setImageUploadVisible] = useState(false);
 
-  const handleOpen = () => setOpen(true);
+  // Reset states when modal is closed
   const handleClose = () => {
     setOpen(false);
-    setScannerVisible(false); // Ensure the scanner is stopped
+    setScannerVisible(false);
+    setQrCodeData("");
+    setImageUploadVisible(false);
   };
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  // Clean up function to reset states
+  useEffect(() => {
+    return () => {
+      setOpen(false);
+      setScannerVisible(false);
+      setQrCodeData("");
+      setImageUploadVisible(false);
+    };
+  }, []);
 
   const handleButtonClickForScanner = () => {
     setScannerVisible(true);
@@ -28,21 +46,26 @@ const User = () => {
     setImageUploadVisible(true);
     setScannerVisible(false);
   };
-  
+
   const handleQRCodeDataForScanner = (data) => {
-    if (data !== "Wrong Input") {
-      if (!open) {
-        setQrCodeData(data);
-  
+    // Immediately stop if scanner isn't visible
+    if (!scannerVisible) return;
+
+    if (data !== "Wrong Input" && data !== qrCodeData) {
+      setScannerVisible(false); // First stop the scanner
+      setQrCodeData(data); // Then set the data
+
+      // Use setTimeout to ensure state updates have propagated
+      setTimeout(() => {
         toast.success(`Certificate Validated Successfully`, {
           className: "toast-success-custom",
           bodyClassName: "custom-toast-body",
           progressClassName: "custom-progress-bar",
+          toastId: "scanner-success",
         });
-  
-        handleOpen(); // Open modal only if it's not already open
-      }
-    } else {
+        handleOpen();
+      }, 100);
+    } else if (data === "Wrong Input") {
       toast.error("Invalid QR Code", {
         className: "toast-error-custom",
         position: toast.POSITION.TOP_CENTER,
@@ -52,58 +75,57 @@ const User = () => {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
+        toastId: "scanner-error",
       });
     }
   };
-  
-  
+
   const handleQRCodeData = (data) => {
-    setQrCodeData(data);
-    if (data != "Wrong Input") {
-      
+    if (data !== "Wrong Input") {
+      setQrCodeData(data);
       toast.success(`Certificate Validated Successfully`, {
         className: "toast-success-custom",
-        bodyClassName: "custom-toast-body", // Optional if you need body-specific styles
-        progressClassName: "custom-progress-bar", // Optional for progress bar styles
+        bodyClassName: "custom-toast-body",
+        progressClassName: "custom-progress-bar",
+        toastId: "upload-success",
       });
       handleOpen();
-      if (scannerVisible) {
-        setScannerVisible(false);
-      }
     } else {
       toast.error("Invalid QR Code", {
         className: "toast-error-custom",
-        position: toast.POSITION.TOP_CENTER,
+
         autoClose: 3000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
+        toastId: "upload-error",
       });
     }
   };
 
   const handleValidate = () => {
     if (textInput.trim() === "") {
-  
       toast.error("Please enter a valid certification id to validate!", {
         className: "toast-error-custom",
+        toastId: "validate-error",
       });
     } else {
       setQrCodeData(textInput);
       toast.success(`Validated ID: ${textInput}`, {
         className: "toast-success-custom",
-        bodyClassName: "custom-toast-body", // Optional if you need body-specific styles
-        progressClassName: "custom-progress-bar", // Optional for progress bar styles
+        bodyClassName: "custom-toast-body",
+        progressClassName: "custom-progress-bar",
+        toastId: "validate-success",
       });
       handleOpen();
     }
   };
-
   return (
     <div className="relative min-h-screen bg-custom-background">
       {/* Company Header - Fixed Position */}
+
       <div className="absolute  top-0 right-0 z-10 p-4 md:p-5 flex items-center gap-3">
         <img
           src="/CTF.png"
@@ -134,9 +156,10 @@ const User = () => {
           {/* QR Scanner */}
           {scannerVisible && (
             <div className="flex justify-center items-center w-full sm:w-3/4 md:w-1/2 h-auto mb-8">
-              <QRScanner onQRCodeData={handleQRCodeDataForScanner}
-              onClose={() => setScannerVisible(false)}
-               />
+              <QRScanner
+                onQRCodeData={handleQRCodeDataForScanner}
+                onClose={() => setScannerVisible(false)}
+              />
             </div>
           )}
 
@@ -208,7 +231,14 @@ const User = () => {
 
           {/* Display Modal only if QR Code data is generated */}
           {qrCodeData && qrCodeData !== "" && qrCodeData !== "Wrong Input" && (
-            <CustomModal open={open} handleClose={handleClose} />
+            <CustomModal
+              open={open}
+              handleClose={handleClose}
+              // Add these props if your CustomModal accepts them
+              onClose={handleClose}
+              closeOnOverlayClick={true}
+              closeOnEsc={true}
+            />
           )}
         </div>
       </div>

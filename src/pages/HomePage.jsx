@@ -30,11 +30,11 @@ const HomePage = () => {
 
   const handleLogout = () => {
     // Clear any stored tokens/session data
-    localStorage.removeItem('token');
-    sessionStorage.removeItem('token');
-    
+    localStorage.removeItem("token");
+    sessionStorage.removeItem("token");
+
     // Redirect to login page
-    navigate('/login');
+    navigate("/login");
   };
 
   const toggleVerified = () => {
@@ -176,18 +176,22 @@ const HomePage = () => {
 
   return (
     <div className="min-h-screen flex flex-col items-center p-4 sm:p-6 bg-gray-950">
-      <div className="w-full max-w-5xl bg-gray-900/10 backdrop-blur-xl shadow-xl rounded-lg p-4 sm:p-6 
+      <div
+        className="w-full max-w-5xl bg-gray-900/10 backdrop-blur-xl shadow-xl rounded-lg p-4 sm:p-6 
                     transform transition-all duration-500 hover:shadow-green-500/5
-                    animate-fadeIn">
+                    animate-fadeIn"
+      >
         {/* Header Section with Logout */}
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4 sm:gap-0 mb-6">
           <div className="flex items-center justify-between w-full">
-            <h2 className="text-2xl sm:text-3xl font-bold text-green-400 tracking-wider text-center sm:text-left
-                         transform transition-all duration-300 hover:scale-102">
+            <h2
+              className="text-2xl sm:text-3xl font-bold text-green-400 tracking-wider text-center sm:text-left
+                         transform transition-all duration-300 hover:scale-102"
+            >
               <Users className="inline-block mr-2 animate-bounce" />
               Event Accounts
             </h2>
-            
+
             <div className="flex items-center gap-4">
               <button
                 onClick={toggleVerified}
@@ -201,7 +205,7 @@ const HomePage = () => {
               >
                 {showVerified ? "Show Not Validated" : "Show Validated"}
               </button>
-              
+
               <button
                 onClick={handleLogout}
                 className="px-6 py-2 bg-red-500 text-black font-medium rounded-md 
@@ -249,10 +253,14 @@ const HomePage = () => {
 
         {/* Generate Modal */}
         {showGenerateModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm 
-                        flex items-center justify-center z-50 animate-fadeIn">
-            <div className="bg-gray-950 rounded-lg shadow-lg p-4 sm:p-6 w-full max-w-xs sm:max-w-md 
-                          transform transition-all duration-300 animate-slideIn mx-4">
+          <div
+            className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm 
+                        flex items-center justify-center z-50 animate-fadeIn"
+          >
+            <div
+              className="bg-gray-950 rounded-lg shadow-lg p-4 sm:p-6 w-full max-w-xs sm:max-w-md 
+                          transform transition-all duration-300 animate-slideIn mx-4"
+            >
               <h3 className="text-base sm:text-lg font-bold mb-4 text-green-400 flex items-center gap-2">
                 <Key className="animate-pulse" />
                 Generate Unique IDs

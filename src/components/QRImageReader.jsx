@@ -4,7 +4,7 @@ import jsQR from "jsqr";
 
 const QRImageReader = ({ onQRCodeData }) => {
   const [error, setError] = useState("");
-  
+
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -20,13 +20,17 @@ const QRImageReader = ({ onQRCodeData }) => {
           ctx.drawImage(img, 0, 0, img.width, img.height);
 
           const imageData = ctx.getImageData(0, 0, img.width, img.height);
-          const qrCode = jsQR(imageData.data, imageData.width, imageData.height);
+          const qrCode = jsQR(
+            imageData.data,
+            imageData.width,
+            imageData.height
+          );
 
           if (qrCode) {
-            onQRCodeData(qrCode.data); 
+            onQRCodeData(qrCode.data);
           } else {
             setError("No QR code detected");
-            onQRCodeData("Wrong Input"); 
+            onQRCodeData("Wrong Input");
           }
         };
       };
@@ -43,7 +47,6 @@ const QRImageReader = ({ onQRCodeData }) => {
         onChange={handleFileChange}
         style={{ display: "none" }}
       />
-    
     </div>
   );
 };

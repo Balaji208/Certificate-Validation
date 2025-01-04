@@ -208,25 +208,27 @@ const UserTable = ({ accounts, showVerified }) => {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-700">
-            {filteredAccounts.map((account, index) => (
-
-              account.email.length > 0  && (<tr
-                key={index}
-                className="hover:bg-green-900/40 transition-all duration-200 cursor-pointer group"
-                onClick={() => handleRowClick(account)}
-              >
-                <td className="px-6 py-4 font-medium text-green-300 flex items-center gap-2">
-                  {account.event}
-                  <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
-                </td>
-                <td className="px-6 py-4">{account.date_of_issue}</td>
-                <td className="px-6 py-4">{account.email}</td>
-                <td className="px-6 py-4">{account.mobile}</td>
-                <td className="px-6 py-4 text-green-400 font-semibold">
-                  {account.certification_type}
-                </td>
-              </tr>)
-            ))}
+            {filteredAccounts.map(
+              (account, index) =>
+                account.email.length > 0 && (
+                  <tr
+                    key={index}
+                    className="hover:bg-green-900/40 transition-all duration-200 cursor-pointer group"
+                    onClick={() => handleRowClick(account)}
+                  >
+                    <td className="px-6 py-4 font-medium text-green-300 flex items-center gap-2">
+                      {account.event}
+                      <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    </td>
+                    <td className="px-6 py-4">{account.date_of_issue}</td>
+                    <td className="px-6 py-4">{account.email}</td>
+                    <td className="px-6 py-4">{account.mobile}</td>
+                    <td className="px-6 py-4 text-green-400 font-semibold">
+                      {account.certification_type}
+                    </td>
+                  </tr>
+                )
+            )}
           </tbody>
         </table>
       </div>
