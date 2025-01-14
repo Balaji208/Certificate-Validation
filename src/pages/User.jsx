@@ -4,8 +4,9 @@ import { toast } from "react-toastify";
 import CustomModal from "../components/Modal";
 import QRScanner from "../components/QRScanner";
 import { NavLink } from "react-router-dom";
-import { QrCode, Upload } from "lucide-react";
+import { QrCode, Upload, Loader2 } from "lucide-react";
 import "react-toastify/dist/ReactToastify.css";
+import QueryFooter from "../components/QueryFooter";
 
 const User = () => {
   const [qrCodeData, setQrCodeData] = useState("");
@@ -13,6 +14,8 @@ const User = () => {
   const [open, setOpen] = useState(false);
   const [scannerVisible, setScannerVisible] = useState(false);
   const [imageUploadVisible, setImageUploadVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [validating, setValidating] = useState(false);
 
   // Reset states when modal is closed
   const handleClose = () => {
@@ -33,6 +36,8 @@ const User = () => {
       setScannerVisible(false);
       setQrCodeData("");
       setImageUploadVisible(false);
+      setIsLoading(false);
+      setValidating(false);
     };
   }, []);
 
@@ -47,16 +52,23 @@ const User = () => {
     setScannerVisible(false);
   };
 
-  const handleQRCodeDataForScanner = (data) => {
-    // Immediately stop if scanner isn't visible
+  const simulateValidation = async () => {
+    return new Promise((resolve) => {
+      setTimeout(resolve, 1500); // Simulate network delay
+    });
+  };
+
+  const handleQRCodeDataForScanner = async (data) => {
     if (!scannerVisible) return;
 
-    if (data !== "Wrong Input" && data !== qrCodeData) {
-      setScannerVisible(false); // First stop the scanner
-      setQrCodeData(data); // Then set the data
+    setIsLoading(true);
+    try {
+      await simulateValidation();
 
-      // Use setTimeout to ensure state updates have propagated
-      setTimeout(() => {
+      if (data !== "Wrong Input" && data !== qrCodeData) {
+        setScannerVisible(false);
+        setQrCodeData(data);
+
         toast.success(`Certificate Validated Successfully`, {
           className: "toast-success-custom",
           bodyClassName: "custom-toast-body",
@@ -64,54 +76,56 @@ const User = () => {
           toastId: "scanner-success",
         });
         handleOpen();
-      }, 100);
-    } else if (data === "Wrong Input") {
-      toast.error("Invalid QR Code", {
-        className: "toast-error-custom",
-        position: toast.POSITION.TOP_CENTER,
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        toastId: "scanner-error",
-      });
+      } else if (data === "Wrong Input") {
+        toast.error("Invalid QR Code", {
+          className: "toast-error-custom",
+          position: toast.POSITION.TOP_CENTER,
+          toastId: "scanner-error",
+        });
+      }
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const handleQRCodeData = (data) => {
-    if (data !== "Wrong Input") {
-      setQrCodeData(data);
-      toast.success(`Certificate Validated Successfully`, {
-        className: "toast-success-custom",
-        bodyClassName: "custom-toast-body",
-        progressClassName: "custom-progress-bar",
-        toastId: "upload-success",
-      });
-      handleOpen();
-    } else {
-      toast.error("Invalid QR Code", {
-        className: "toast-error-custom",
+  const handleQRCodeData = async (data) => {
+    setIsLoading(true);
+    try {
+      await simulateValidation();
 
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        toastId: "upload-error",
-      });
+      if (data !== "Wrong Input") {
+        setQrCodeData(data);
+        toast.success(`Certificate Validated Successfully`, {
+          className: "toast-success-custom",
+          bodyClassName: "custom-toast-body",
+          progressClassName: "custom-progress-bar",
+          toastId: "upload-success",
+        });
+        handleOpen();
+      } else {
+        toast.error("Invalid QR Code", {
+          className: "toast-error-custom",
+          toastId: "upload-error",
+        });
+      }
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const handleValidate = () => {
+  const handleValidate = async () => {
     if (textInput.trim() === "") {
       toast.error("Please enter a valid certification id to validate!", {
         className: "toast-error-custom",
         toastId: "validate-error",
       });
-    } else {
+      return;
+    }
+
+    setValidating(true);
+    try {
+      await simulateValidation();
+      
       setQrCodeData(textInput);
       toast.success(`Validated ID: ${textInput}`, {
         className: "toast-success-custom",
@@ -120,28 +134,29 @@ const User = () => {
         toastId: "validate-success",
       });
       handleOpen();
+    } finally {
+      setValidating(false);
     }
   };
-  return (
-    <div className="relative min-h-screen bg-custom-background">
-      {/* Company Header - Fixed Position */}
 
-      <div className="absolute  top-0 right-0 z-10 p-4 md:p-5 flex items-center gap-3">
+  return (
+    <div className="relative min-h-screen bg-custom-background flex flex-col">
+      {/* Company Header - Fixed Position */}
+      <div className="absolute top-0 right-0 z-10 p-4 md:p-5 flex items-center gap-3 cursor-pointer"
+      onClick={() => window.location.href = "https://cegtechforum.in/"}
+      >
         <img
           src="/CTF.png"
           alt="Company Logo"
           className="w-8 h-8 md:w-12 md:h-9 object-contain"
         />
-        <h1 className="text-lg md:text-xl  font-bold text-white hidden sm:block">
+        <h1 className="text-lg md:text-xl font-bold text-white hidden sm:block">
           CEG Tech Forum
         </h1>
       </div>
 
       {/* Main Content */}
-      <div
-        className="flex flex-col md:flex-row"
-        style={{ minHeight: "110vh", background: "cover" }}
-      >
+      <div className="flex-1 flex flex-col md:flex-row" style={{ minHeight: "110vh" }}>
         {/* Left Section: Image */}
         <div className="w-full sm:w-3/4 md:w-3/4 h-auto">
           <img
@@ -151,8 +166,18 @@ const User = () => {
           />
         </div>
 
-        {/* Right Section: QR Scanner, Image Upload, Text Input, and Buttons */}
+        {/* Right Section */}
         <div className="flex flex-col w-full h-auto md:h-screen justify-center items-center space-y-8 p-4">
+          {/* Loading Overlay */}
+          {isLoading && (
+            <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+              <div className="bg-zinc-900 p-6 rounded-lg shadow-xl flex items-center space-x-4">
+                <Loader2 className="w-8 h-8 text-emerald-500 animate-spin" />
+                <span className="text-lg text-white">Validating Certificate...</span>
+              </div>
+            </div>
+          )}
+
           {/* QR Scanner */}
           {scannerVisible && (
             <div className="flex justify-center items-center w-full sm:w-3/4 md:w-1/2 h-auto mb-8">
@@ -176,12 +201,21 @@ const User = () => {
               className="w-full sm:flex-1 h-12 px-4 rounded-md border-2 bg-slate-950 border-zinc-600 focus:border-emerald-500 focus:outline-none text-slate-100 placeholder-slate-400"
               value={textInput}
               onChange={(e) => setTextInput(e.target.value)}
+              disabled={validating}
             />
             <button
               onClick={handleValidate}
-              className="w-full sm:w-auto px-6 py-3 rounded-md bg-emerald-600 text-white font-bold hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 focus:ring-offset-slate-950 transition-all duration-300 shadow-lg hover:shadow-emerald-500/20"
+              disabled={validating}
+              className="w-full sm:w-auto px-6 py-3 rounded-md bg-emerald-600 text-white font-bold hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 focus:ring-offset-slate-950 transition-all duration-300 shadow-lg hover:shadow-emerald-500/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
             >
-              Validate
+              {validating ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <span>Validating...</span>
+                </>
+              ) : (
+                <span>Check Status</span>
+              )}
             </button>
           </div>
 
@@ -202,7 +236,8 @@ const User = () => {
               <button
                 key={label}
                 onClick={onClick}
-                className="w-64 sm:w-56 md:w-64 h-20 rounded-3xl relative group overflow-hidden"
+                disabled={isLoading || validating}
+                className="w-64 sm:w-56 md:w-64 h-20 rounded-3xl relative group overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-zinc-900 to-zinc-800 transition-all duration-300" />
                 <div className="absolute inset-0 bg-gradient-to-r from-emerald-600 to-emerald-400 opacity-0 group-hover:opacity-20 transition-all duration-300" />
@@ -234,7 +269,6 @@ const User = () => {
             <CustomModal
               open={open}
               handleClose={handleClose}
-              // Add these props if your CustomModal accepts them
               onClose={handleClose}
               closeOnOverlayClick={true}
               closeOnEsc={true}
@@ -242,6 +276,8 @@ const User = () => {
           )}
         </div>
       </div>
+
+      <QueryFooter />
     </div>
   );
 };

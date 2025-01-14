@@ -52,3 +52,29 @@ body {
 input[type="date"]::-webkit-calendar-picker-indicator {
   filter: invert(1); /* This will make the icon white */
 }
+/* Full-screen overlay */
+.loader-container {
+  text-align: center;
+  position: relative;
+}
+
+.loader-video {
+  max-width: 100%;
+  height: auto;
+}
+
+.animate-pulse {
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.5;
+  }
+}
