@@ -7,6 +7,7 @@ import { NavLink } from "react-router-dom";
 import { QrCode, Upload, Loader2 } from "lucide-react";
 import "react-toastify/dist/ReactToastify.css";
 import QueryFooter from "../components/QueryFooter";
+import CertificateValidationSVG from "../components/CertificatValidationSVG";
 
 const User = () => {
   const [qrCodeData, setQrCodeData] = useState("");
@@ -125,7 +126,7 @@ const User = () => {
     setValidating(true);
     try {
       await simulateValidation();
-      
+
       setQrCodeData(textInput);
       toast.success(`Validated ID: ${textInput}`, {
         className: "toast-success-custom",
@@ -142,28 +143,28 @@ const User = () => {
   return (
     <div className="relative min-h-screen bg-custom-background flex flex-col">
       {/* Company Header - Fixed Position */}
-      <div className="absolute top-0 right-0 z-10 p-4 md:p-5 flex items-center gap-3 cursor-pointer"
-  onClick={() => window.location.href = "https://cegtechforum.in/"}
->
-  <img
-    src="/CTF.png"
-    alt="Company Logo"
-    className="w-12 h-10 md:w-12 md:h-9 object-contain"
-  />
-  <h1 className="text-sm md:text-xl font-bold text-white">
-    CEG Tech Forum
-  </h1>
-</div>
+      <div
+        className="absolute top-0 right-0 z-10 p-4 md:p-5 flex items-center gap-3 cursor-pointer"
+        onClick={() => (window.location.href = "https://cegtechforum.in/")}
+      >
+        <img
+          src="/CTF.png"
+          alt="Company Logo"
+          className="w-12 h-10 md:w-12 md:h-9 object-contain"
+        />
+        <h1 className="text-sm md:text-xl font-bold text-white">
+          CEG Tech Forum
+        </h1>
+      </div>
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col md:flex-row" style={{ minHeight: "110vh" }}>
+      <div
+        className="flex-1 flex flex-col md:flex-row"
+        style={{ minHeight: "110vh" }}
+      >
         {/* Left Section: Image */}
         <div className="mt-8 w-full sm:w-3/4 md:w-3/4 h-auto">
-          <img
-            src="/User_Landing_img.png"
-            alt="Landing"
-            className="h-auto sm:h-auto md:h-auto object-cover animate"
-          />
+          <CertificateValidationSVG className="h-auto w-full"/>
         </div>
 
         {/* Right Section */}
