@@ -19,11 +19,11 @@ const QueryFooter = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-
+    
     try {
       const formData = new FormData(e.target);
       const response = await fetch(
-        "https://formsubmit.co/balajijayakumar777@gmail.com",
+        "https://formsubmit.co/guruceg2026@gmail.com",
         {
           method: "POST",
           body: formData,
@@ -49,7 +49,7 @@ const QueryFooter = () => {
 
   return (
     <>
-      <div className="w-full mt-auto bg-gradient-to-b  backdrop-blur-xl border-t border-zinc-800/30">
+      <div className="w-full mb-0 mt-auto bg-gradient-to-b  backdrop-blur-xl border-t border-zinc-800/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">

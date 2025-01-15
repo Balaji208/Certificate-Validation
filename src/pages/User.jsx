@@ -143,22 +143,22 @@ const User = () => {
     <div className="relative min-h-screen bg-custom-background flex flex-col">
       {/* Company Header - Fixed Position */}
       <div className="absolute top-0 right-0 z-10 p-4 md:p-5 flex items-center gap-3 cursor-pointer"
-      onClick={() => window.location.href = "https://cegtechforum.in/"}
-      >
-        <img
-          src="/CTF.png"
-          alt="Company Logo"
-          className="w-8 h-8 md:w-12 md:h-9 object-contain"
-        />
-        <h1 className="text-lg md:text-xl font-bold text-white hidden sm:block">
-          CEG Tech Forum
-        </h1>
-      </div>
+  onClick={() => window.location.href = "https://cegtechforum.in/"}
+>
+  <img
+    src="/CTF.png"
+    alt="Company Logo"
+    className="w-12 h-10 md:w-12 md:h-9 object-contain"
+  />
+  <h1 className="text-sm md:text-xl font-bold text-white">
+    CEG Tech Forum
+  </h1>
+</div>
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col md:flex-row" style={{ minHeight: "110vh" }}>
         {/* Left Section: Image */}
-        <div className="w-full sm:w-3/4 md:w-3/4 h-auto">
+        <div className="mt-8 w-full sm:w-3/4 md:w-3/4 h-auto">
           <img
             src="/User_Landing_img.png"
             alt="Landing"
@@ -173,7 +173,7 @@ const User = () => {
             <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
               <div className="bg-zinc-900 p-6 rounded-lg shadow-xl flex items-center space-x-4">
                 <Loader2 className="w-8 h-8 text-emerald-500 animate-spin" />
-                <span className="text-lg text-white">Validating Certificate...</span>
+                <span className="text-lg text-white">Checking Status...</span>
               </div>
             </div>
           )}
@@ -211,7 +211,7 @@ const User = () => {
               {validating ? (
                 <>
                   <Loader2 className="w-4 h-4 animate-spin" />
-                  <span>Validating...</span>
+                  <span>Checking Status...</span>
                 </>
               ) : (
                 <span>Check Status</span>

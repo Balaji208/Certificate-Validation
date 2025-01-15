@@ -1,4 +1,3 @@
-import React from "react";
 import loadingAnimation from "/certificate-loader.webm"; // Import the webm file
 
 const Loader = () => {

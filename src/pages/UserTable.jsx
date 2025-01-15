@@ -1,19 +1,9 @@
 import PropTypes from "prop-types";
-import { useState } from "react";
-import {
-  Users,
-  Calendar,
-  Mail,
-  Phone,
-  Award,
-  X,
-  ChevronRight,
-  Shield,
-  Timer,
-  Trophy,
-  Pencil,
-} from "lucide-react";
+
 import { toast } from "react-toastify";
+import React, { useState, useEffect } from 'react';
+import { Users, Mail, Phone, Trophy, Calendar, Shield, Timer, Award, ChevronRight, X, Pencil } from 'lucide-react';
+
 const UserTable = ({ accounts, showVerified }) => {
   const [selectedAccount, setSelectedAccount] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -39,15 +29,23 @@ const UserTable = ({ accounts, showVerified }) => {
   };
 
   const handleInputChange = (field, value) => {
-    setEditedData((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
+    setEditedData((prev) => {
+      const newData = {
+        ...prev,
+        [field]: value,
+      };
+
+      // Reset achievement_level if certification_type is not 'achievement'
+      if (field === 'certification_type' && value !== 'achievement') {
+        newData.achievement_level = null;
+      }
+
+      return newData;
+    });
   };
 
   const updateAccount = async (accountData) => {
     try {
-      console.log("Updating account:", accountData);
       const response = await fetch(
         `http://localhost:5000/accounts/${accountData.unique_id}`,
         {
@@ -71,34 +69,25 @@ const UserTable = ({ accounts, showVerified }) => {
     }
   };
 
-  // Modify the handleSubmit function in the UserTable component
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      // Show loading toast
       const loadingToastId = toast.loading("Updating account...", {
         className: "toast-success-custom",
       });
 
-      // Call the update function
       const updatedAccount = await updateAccount(editedData);
-
-      // Update local state
       setSelectedAccount(updatedAccount);
       setEditedData(updatedAccount);
       setIsEditing(false);
-
-      // Update the accounts list through the callback
       updateAccount(updatedAccount);
 
-      // Show success toast
       toast.success("Account updated successfully!", {
         id: loadingToastId,
         className: "toast-success-custom",
       });
     } catch (error) {
-      // Show error toast
       toast.error("Failed to update account", {
         className: "toast-error-custom",
       });
@@ -137,11 +126,14 @@ const UserTable = ({ accounts, showVerified }) => {
       key: "certification_type",
       icon: <Award className="w-4 h-4 flex-shrink-0" />,
       label: "Certification Type",
+      type: "select",
+      options: ["Achievement", "Participation"],
     },
     {
       key: "achievement_level",
       icon: <Trophy className="w-4 h-4 flex-shrink-0" />,
       label: "Achievement Level",
+      conditional: (data) => data.certification_type === "achievement",
     },
     {
       key: "date_of_issue",
@@ -152,7 +144,8 @@ const UserTable = ({ accounts, showVerified }) => {
       key: "validation_status",
       icon: <Shield className="w-4 h-4 flex-shrink-0" />,
       label: "Validation Status",
-      readOnly: true,
+      type : "select",
+      options : ["validated","pending","unlisted"]
     },
     {
       key: "date_of_validation",
@@ -235,95 +228,110 @@ const UserTable = ({ accounts, showVerified }) => {
 
       {isModalOpen && selectedAccount && (
         <div className="fixed inset-0 flex justify-center items-center bg-zinc-900/80 backdrop-blur-sm p-4">
-          <div
-            className="bg-gradient-to-b from-zinc-900 to-zinc-950 p-4 sm:p-8 rounded-2xl shadow-2xl 
+          <div className="bg-gradient-to-b from-zinc-900 to-zinc-950 p-4 sm:p-8 rounded-2xl shadow-2xl 
                        w-full sm:w-[90%] md:w-[70%] lg:w-1/2 
                        max-h-[90vh] sm:max-h-[80vh] 
                        overflow-auto border border-zinc-800 
-                       custom-scrollbar relative"
-          >
-            <button
-              onClick={closeModal}
-              className="absolute top-2 right-2 sm:top-4 sm:right-4 
-                      text-gray-400 hover:text-white transition-colors
-                      p-2 rounded-lg hover:bg-zinc-800/50"
-            >
-              <X className="w-5 h-5 sm:w-6 sm:h-6" />
-            </button>
-
-            <h2
-              className="text-xl sm:text-2xl font-bold text-green-400 mb-4 sm:mb-6 
-                        text-center flex items-center justify-center gap-2 
-                        pt-2 sm:pt-0"
-            >
-              <Shield className="w-5 h-5 sm:w-6 sm:h-6" />
-              Account Details
-              <button
-                onClick={() => setIsEditing(!isEditing)}
-                className="ml-2 px-3 py-1 text-sm rounded-lg bg-green-600 hover:bg-green-700 
-           text-white transition-colors flex items-center gap-2"
-              >
-                {isEditing ? (
-                  <>
+                       custom-scrollbar relative">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-xl sm:text-2xl font-bold text-green-400 flex items-center gap-2">
+                <Shield className="w-5 h-5 sm:w-6 sm:h-6" />
+                Account Details
+              </h2>
+              <div className="flex gap-2">
+                {isEditing && (
+                  <button
+                    onClick={() => setIsEditing(false)}
+                    className="text-sm rounded-lg bg-zinc-700 hover:bg-zinc-600 
+                             text-white transition-colors px-3 py-1 flex items-center gap-2"
+                  >
                     <X className="w-4 h-4" />
                     <span>Cancel</span>
-                  </>
-                ) : (
-                  <>
+                  </button>
+                )}
+                {!isEditing && (
+                  <button
+                    onClick={() => setIsEditing(true)}
+                    className="text-sm rounded-lg bg-green-600 hover:bg-green-700 
+                             text-white transition-colors px-3 py-1 flex items-center gap-2"
+                  >
                     <Pencil className="w-4 h-4" />
                     <span>Edit</span>
-                  </>
+                  </button>
                 )}
-              </button>
-            </h2>
+                <button
+                  onClick={closeModal}
+                  className="text-gray-400 hover:text-white transition-colors
+                           p-2 rounded-lg hover:bg-zinc-800/50"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+            </div>
 
             <form onSubmit={handleSubmit}>
               <ul className="space-y-3 sm:space-y-4 text-zinc-300 text-sm sm:text-base">
-                {fields.map(({ key, icon, label, readOnly }) => (
-                  <li key={label} className="flex gap-2">
-                    <div className="mt-1">{icon}</div>
-                    <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 flex-grow">
-                      <strong className="text-green-400 whitespace-nowrap">
-                        {label}:
-                      </strong>
-                      {isEditing && !readOnly ? (
-                        <input
-                          type="text"
-                          value={editedData[key]}
-                          onChange={(e) =>
-                            handleInputChange(key, e.target.value)
-                          }
-                          className="bg-zinc-800 text-white px-2 py-1 rounded-lg 
-                                   border border-zinc-700 focus:border-green-500 
-                                   outline-none flex-grow"
-                        />
-                      ) : (
-                        <span className="break-words">
-                          {key === "validation_status"
-                            ? editedData[key]
-                              ? "Verified"
-                              : "Not Verified"
-                            : editedData[key]}
-                        </span>
-                      )}
-                    </div>
-                  </li>
-                ))}
+                {fields.map(({ key, icon, label, readOnly, type, options, conditional, alwaysShow }) => {
+                  // Skip conditional fields if condition is not met and not alwaysShow
+                  if (conditional && !conditional(editedData) && !alwaysShow) {
+                    return null;
+                  }
+
+                  return (
+                    <li key={label} className="flex gap-2">
+                      <div className="mt-1">{icon}</div>
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 flex-grow">
+                        <strong className="text-green-400 whitespace-nowrap">
+                          {label}:
+                        </strong>
+                        {isEditing && !readOnly ? (
+                          type === 'select' ? (
+                            <div className="relative w-full sm:w-auto flex-grow">
+                              <select
+                                value={editedData[key]}
+                                onChange={(e) => handleInputChange(key, e.target.value)}
+                                className="appearance-none w-full bg-zinc-800 text-white px-2 py-1 rounded-lg 
+                                         border border-zinc-700 focus:border-green-500 
+                                         outline-none pr-8"
+                              >
+                                {options.map((option) => (
+                                  <option key={option} value={option}>
+                                    {option}
+                                  </option>
+                                ))}
+                              </select>
+                              <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                                <ChevronRight className="w-4 h-4 transform rotate-90" />
+                              </div>
+                            </div>
+                          ) : (
+                            <input
+                              type="text"
+                              value={editedData[key] || ''}
+                              onChange={(e) => handleInputChange(key, e.target.value)}
+                              className="w-full sm:w-auto bg-zinc-800 text-white px-2 py-1 rounded-lg 
+                                       border border-zinc-700 focus:border-green-500 
+                                       outline-none flex-grow"
+                              readOnly={readOnly}
+                            />
+                          )
+                        ) : (
+                          <span className="break-words">
+                            {key === "validation_status"
+                              ? editedData[key]
+                                ? "Verified"
+                                : "Not Verified"
+                              : editedData[key] || ''}
+                          </span>
+                        )}
+                      </div>
+                    </li>
+                  );
+                })}
               </ul>
 
               {isEditing && (
                 <div className="mt-6 flex justify-end gap-3">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setEditedData(selectedAccount);
-                      setIsEditing(false);
-                    }}
-                    className="px-4 py-2 rounded-lg bg-zinc-700 hover:bg-zinc-600 
-                             text-white transition-colors"
-                  >
-                    Cancel
-                  </button>
                   <button
                     type="submit"
                     className="px-4 py-2 rounded-lg bg-green-600 hover:bg-green-700 
@@ -340,6 +348,7 @@ const UserTable = ({ accounts, showVerified }) => {
     </div>
   );
 };
+
 
 UserTable.propTypes = {
   accounts: PropTypes.arrayOf(
