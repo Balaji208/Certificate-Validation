@@ -4,11 +4,11 @@ body {
   height: 100%;
   margin: 0;
   padding: 0;
-  background: #1c1b1b; /* Dark base background */
+  background: #101010; /* Dark base background */
   color: #f0f0f0; /* Light text color */
   background-image: linear-gradient(to right, #1c1e1c 1px, transparent 1px),
     linear-gradient(to bottom, #1c1e1c 1px, transparent 1px);
-  background-size: 30px 30px; /* Adjust grid size */
+  background-size: 28px 28px; /* Adjust grid size */
 }
 
 /* Ensure the content takes at least the full height of the screen */
