@@ -23,7 +23,7 @@ const QueryFooter = () => {
     try {
       const formData = new FormData(e.target);
       const response = await fetch(
-        "https://formsubmit.co/your-email@domain.com",
+        "https://formsubmit.co/balajijayakumar777@gmail.com",
         {
           method: "POST",
           body: formData,

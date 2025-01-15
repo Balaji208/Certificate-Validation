@@ -177,9 +177,9 @@ const NewUserModal = ({ isOpen, closeModal }) => {
       baseFields.splice(7, 0, {
         id: "achievement_level",
         label: "Achievement Level",
-        type: "select",
+        type: "text",
         icon: <Award className="text-emerald-400" size={16} />,
-        options: ["1st", "2nd", "3rd"]
+       
       });
     }
 
