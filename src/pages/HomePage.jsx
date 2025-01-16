@@ -4,7 +4,15 @@ import UserTable from "./UserTable";
 import NewUserModal from "./NewUserModal";
 import jsPDF from "jspdf";
 import QRCode from "qrcode";
-import { PlusCircle, Key, Users, LogOut, FileSpreadsheet,Search,X } from "lucide-react";
+import {
+  PlusCircle,
+  Key,
+  Users,
+  LogOut,
+  FileSpreadsheet,
+  Search,
+  X,
+} from "lucide-react";
 import * as XLSX from "xlsx";
 
 const HomePage = () => {
@@ -31,6 +39,7 @@ const HomePage = () => {
 
     fetchAccounts();
   }, []);
+
   const filteredAccounts = accounts.filter((account) => {
     const searchLower = searchTerm.toLowerCase();
     return (
@@ -210,9 +219,11 @@ const HomePage = () => {
   };
   return (
     <div className="min-h-screen w-full bg-gray-950 px-4 py-6 md:px-6 lg:px-8">
-      <div className="mx-auto max-w-7xl w-full bg-gray-900/10 backdrop-blur-xl shadow-xl rounded-lg p-4 md:p-6 
+      <div
+        className="mx-auto max-w-7xl w-full bg-gray-900/10 backdrop-blur-xl shadow-xl rounded-lg p-4 md:p-6 
                     transform transition-all duration-500 hover:shadow-green-500/5
-                    animate-fadeIn">
+                    animate-fadeIn"
+      >
         {/* Existing header section... */}
         <div className="space-y-4 md:space-y-0 mb-6">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
@@ -226,10 +237,11 @@ const HomePage = () => {
                 onClick={toggleVerified}
                 className={`px-4 py-2 font-medium rounded-md transform transition-all duration-300 
                          hover:scale-105 active:scale-95 shadow-lg flex items-center justify-center gap-2
-                         ${showVerified
-                    ? "bg-green-500 text-black hover:bg-green-400 shadow-green-500/50"
-                    : "bg-red-500 text-black hover:bg-red-400 shadow-red-500/50"
-                  }`}
+                         ${
+                           showVerified
+                             ? "bg-green-500 text-black hover:bg-green-400 shadow-green-500/50"
+                             : "bg-red-500 text-black hover:bg-red-400 shadow-red-500/50"
+                         }`}
               >
                 {showVerified ? "Show Not Validated" : "Show Validated"}
               </button>
@@ -250,28 +262,31 @@ const HomePage = () => {
 
         {/* Search Bar */}
         <div className="mb-6">
-  <div className="relative">
-    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-green-400" size={20} />
-    <input
-      type="text"
-      placeholder="Search by name, email, mobile, or ID..."
-      value={searchTerm}
-      onChange={(e) => setSearchTerm(e.target.value)}
-      className="w-full pl-10 pr-10 py-2 bg-gray-800 border border-green-500/30 
+          <div className="relative">
+            <Search
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-green-400"
+              size={20}
+            />
+            <input
+              type="text"
+              placeholder="Search by name, email, mobile, or ID..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full pl-10 pr-10 py-2 bg-gray-800 border border-green-500/30 
                rounded-lg focus:border-green-500/50 text-green-400 
                placeholder-green-400/50 transition-all duration-300"
-    />
-    {searchTerm && (
-      <button
-        onClick={() => setSearchTerm("")}
-        className="absolute right-3 top-1/2 transform -translate-y-1/2 
+            />
+            {searchTerm && (
+              <button
+                onClick={() => setSearchTerm("")}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 
                  text-green-400 hover:text-green-300 transition-colors duration-200"
-      >
-        <X size={16} />
-      </button>
-    )}
-  </div>
-</div>
+              >
+                <X size={16} />
+              </button>
+            )}
+          </div>
+        </div>
 
         {/* Existing action buttons section... */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-6">
@@ -285,7 +300,7 @@ const HomePage = () => {
             <PlusCircle size={20} />
             <span>Add User</span>
           </button>
-          
+
           <button
             className="px-4 py-2 bg-green-500 text-black font-medium rounded-md 
                    hover:bg-green-400 transform transition-all duration-300
@@ -318,10 +333,14 @@ const HomePage = () => {
         )}
 
         {showGenerateModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm 
-                        flex items-center justify-center z-50 animate-fadeIn p-4">
-            <div className="bg-gray-950 rounded-lg shadow-lg p-5 w-full max-w-sm 
-                          transform transition-all duration-300 animate-slideIn">
+          <div
+            className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm 
+                        flex items-center justify-center z-50 animate-fadeIn p-4"
+          >
+            <div
+              className="bg-gray-950 rounded-lg shadow-lg p-5 w-full max-w-sm 
+                          transform transition-all duration-300 animate-slideIn"
+            >
               <h3 className="text-lg font-bold mb-4 text-green-400 flex items-center gap-2">
                 <Key className="animate-pulse" />
                 Generate Unique IDs
@@ -360,66 +379,70 @@ const HomePage = () => {
 
         {/* User Table with pagination */}
         <div className="animate-fadeIn">
-          <UserTable 
-            accounts={paginatedAccounts} 
-            showVerified={showVerified} 
-          />
-          
+          <UserTable accounts={paginatedAccounts} showVerified={showVerified} />
+
           {/* Pagination Controls */}
           {totalPages > 1 && (
-  <div className="mt-4 flex justify-center items-center gap-2">
-    <button
-      onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-      disabled={currentPage === 1}
-      className="px-3 py-1 bg-green-500 text-black rounded-md disabled:opacity-50
+            <div className="mt-4 flex justify-center items-center gap-2">
+              <button
+                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                disabled={currentPage === 1}
+                className="px-3 py-1 bg-green-500 text-black rounded-md disabled:opacity-50
                hover:bg-green-400 transform transition-all duration-300"
-    >
-      Previous
-    </button>
-    
-    <div className="flex gap-1">
-      {[...Array(totalPages)].map((_, index) => {
-        const pageNumber = index + 1;
-        // Show first page, last page, current page, and pages around current
-        const shouldShow = 
-          pageNumber === 1 || 
-          pageNumber === totalPages ||
-          Math.abs(currentPage - pageNumber) <= 2;
-        
-        // Show dots for gaps
-        if (!shouldShow) {
-          if (pageNumber === 2 || pageNumber === totalPages - 1) {
-            return <span key={pageNumber} className="text-green-400">...</span>;
-          }
-          return null;
-        }
+              >
+                Previous
+              </button>
 
-        return (
-          <button
-            key={pageNumber}
-            onClick={() => setCurrentPage(pageNumber)}
-            className={`w-8 h-8 rounded-md transition-all duration-300
-                     ${currentPage === pageNumber
-                       ? 'bg-green-500 text-black font-medium'
-                       : 'bg-gray-800 text-green-400 hover:bg-gray-700'
+              <div className="flex gap-1">
+                {[...Array(totalPages)].map((_, index) => {
+                  const pageNumber = index + 1;
+                  // Show first page, last page, current page, and pages around current
+                  const shouldShow =
+                    pageNumber === 1 ||
+                    pageNumber === totalPages ||
+                    Math.abs(currentPage - pageNumber) <= 2;
+
+                  // Show dots for gaps
+                  if (!shouldShow) {
+                    if (pageNumber === 2 || pageNumber === totalPages - 1) {
+                      return (
+                        <span key={pageNumber} className="text-green-400">
+                          ...
+                        </span>
+                      );
+                    }
+                    return null;
+                  }
+
+                  return (
+                    <button
+                      key={pageNumber}
+                      onClick={() => setCurrentPage(pageNumber)}
+                      className={`w-8 h-8 rounded-md transition-all duration-300
+                     ${
+                       currentPage === pageNumber
+                         ? "bg-green-500 text-black font-medium"
+                         : "bg-gray-800 text-green-400 hover:bg-gray-700"
                      }`}
-          >
-            {pageNumber}
-          </button>
-        );
-      })}
-    </div>
+                    >
+                      {pageNumber}
+                    </button>
+                  );
+                })}
+              </div>
 
-    <button
-      onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-      disabled={currentPage === totalPages}
-      className="px-3 py-1 bg-green-500 text-black rounded-md disabled:opacity-50
+              <button
+                onClick={() =>
+                  setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+                }
+                disabled={currentPage === totalPages}
+                className="px-3 py-1 bg-green-500 text-black rounded-md disabled:opacity-50
                hover:bg-green-400 transform transition-all duration-300"
-    >
-      Next
-    </button>
-  </div>
-)}
+              >
+                Next
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>

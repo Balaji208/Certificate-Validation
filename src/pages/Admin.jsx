@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { LockKeyhole, User, Loader2, Eye, EyeOff } from "lucide-react";
-import { NavLink, useNavigate } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 
 const Admin = () => {
   const [focused, setFocused] = useState("");

@@ -55,7 +55,7 @@ const User = () => {
 
   const simulateValidation = async () => {
     return new Promise((resolve) => {
-      setTimeout(resolve, 1500); // Simulate network delay
+      setTimeout(resolve, 1500); 
     });
   };
 
@@ -155,7 +155,7 @@ const User = () => {
         <h1 className="text-sm md:text-xl font-bold text-white">
           CEG Tech Forum
         </h1>
-      </div>
+      </div>  
 
       {/* Main Content */}
       <div

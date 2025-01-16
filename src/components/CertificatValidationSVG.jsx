@@ -4,228 +4,317 @@ const CertificateValidationSVG = () => {
   return (
     <svg viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
       <defs>
-        {/* Premium paper texture with darker theme */}
-        <pattern id="premiumPaper" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
-          <rect width="100" height="100" fill="#111827"/>
-          <filter id="noise">
-            <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" stitchTiles="stitch"/>
-            <feColorMatrix type="matrix" values="0 0 0 0 0.1, 0 0 0 0 0.1, 0 0 0 0 0.1, 0 0 0 0.05 0"/>
-          </filter>
-          <rect width="100" height="100" filter="url(#noise)"/>
+        {/* Enhanced matrix rain effect */}
+        <pattern id="matrixBg" x="0" y="0" width="50" height="50" patternUnits="userSpaceOnUse">
+          <rect width="50" height="50" fill="#000000"/>
+          <g fill="#00ff00" opacity="0.15">
+            <text x="5" y="20" fontSize="10">
+              <animate
+                attributeName="opacity"
+                values="0.05;0.15;0.05"
+                dur="3s"
+                repeatCount="indefinite"
+              />
+              01
+            </text>
+            <text x="25" y="35" fontSize="14">
+              <animate
+                attributeName="opacity"
+                values="0.15;0.05;0.15"
+                dur="2s"
+                repeatCount="indefinite"
+              />
+              CTF
+            </text>
+            <text x="10" y="45" fontSize="12">
+              <animate
+                attributeName="opacity"
+                values="0.1;0.2;0.1"
+                dur="4s"
+                repeatCount="indefinite"
+              />
+              10
+            </text>
+          </g>
         </pattern>
 
-        {/* Modern gradient with green accent */}
-        <linearGradient id="elegantGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-          <stop offset="0%" stopColor="#064e3b"/>
-          <stop offset="100%" stopColor="#10b981"/>
-        </linearGradient>
+        {/* Advanced circuit board pattern */}
+        <pattern id="circuitPattern" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
+          <rect width="100" height="100" fill="none"/>
+          <path
+            d="M10 10 H90 M10 50 H90 M10 90 H90 M10 10 V90 M50 10 V90 M90 10 V90"
+            stroke="#00ff00"
+            strokeWidth="0.5"
+            opacity="0.1"
+          >
+            <animate
+              attributeName="stroke-dasharray"
+              values="0,200;200,0"
+              dur="10s"
+              repeatCount="indefinite"
+            />
+          </path>
+          {/* Circuit nodes */}
+          <circle cx="10" cy="10" r="2" fill="#00ff00" opacity="0.2">
+            <animate
+              attributeName="r"
+              values="2;3;2"
+              dur="2s"
+              repeatCount="indefinite"
+            />
+          </circle>
+          <circle cx="90" cy="10" r="2" fill="#00ff00" opacity="0.2"/>
+          <circle cx="10" cy="90" r="2" fill="#00ff00" opacity="0.2"/>
+          <circle cx="90" cy="90" r="2" fill="#00ff00" opacity="0.2"/>
+        </pattern>
 
-        {/* Enhanced glow effect */}
-        <filter id="subtleGlow" x="-50%" y="-50%" width="200%" height="200%">
-          <feGaussianBlur stdDeviation="3" result="blur"/>
-          <feFlood floodColor="#10b981" floodOpacity="0.3"/>
+        {/* Enhanced cyber glow filter */}
+        <filter id="cyberGlow" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="2" result="blur"/>
+          <feFlood floodColor="#00ff00" floodOpacity="0.5"/>
           <feComposite in2="blur" operator="in"/>
           <feComposite in="SourceGraphic" operator="over"/>
+          <feMorphology operator="dilate" radius="1"/>
         </filter>
 
-        {/* Enhanced glass effect */}
-        <filter id="glass">
-          <feGaussianBlur in="SourceAlpha" stdDeviation="4" result="blur"/>
-          <feOffset in="blur" dx="2" dy="2" result="offsetBlur"/>
-          <feComponentTransfer in="offsetBlur" result="glow">
-            <feFuncA type="linear" slope="0.4"/>
-          </feComponentTransfer>
-          <feMerge>
-            <feMergeNode in="glow"/>
-            <feMergeNode in="SourceGraphic"/>
-          </feMerge>
-        </filter>
-
-        {/* Metallic gradient with green tint */}
-        <linearGradient id="metallicGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stopColor="#064e3b"/>
-          <stop offset="50%" stopColor="#059669"/>
-          <stop offset="100%" stopColor="#064e3b"/>
+        {/* Advanced scan line effect */}
+        <linearGradient id="scanline" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stopColor="rgba(0, 255, 0, 0)"/>
+          <stop offset="50%" stopColor="rgba(0, 255, 0, 0.2)"/>
+          <stop offset="100%" stopColor="rgba(0, 255, 0, 0)"/>
+          <animate
+            attributeName="y1"
+            values="0%;100%;0%"
+            dur="3s"
+            repeatCount="indefinite"
+          />
         </linearGradient>
 
-        {/* Shimmer effect */}
-        <linearGradient id="shimmer" x1="0%" y1="0%" x2="100%" y2="0%">
-          <stop offset="0%" stopColor="rgba(16, 185, 129, 0)">
-            <animate attributeName="offset" values="0;1" dur="2s" repeatCount="indefinite"/>
+        {/* Holographic effect */}
+        <linearGradient id="holographic" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stopColor="rgba(0, 255, 0, 0)">
+            <animate
+              attributeName="offset"
+              values="0;1;0"
+              dur="5s"
+              repeatCount="indefinite"
+            />
           </stop>
-          <stop offset="20%" stopColor="rgba(16, 185, 129, 0.2)">
-            <animate attributeName="offset" values="0;1" dur="2s" repeatCount="indefinite"/>
+          <stop offset="20%" stopColor="rgba(0, 255, 0, 0.3)">
+            <animate
+              attributeName="offset"
+              values="0;1;0"
+              dur="5s"
+              repeatCount="indefinite"
+            />
           </stop>
-          <stop offset="40%" stopColor="rgba(16, 185, 129, 0)">
-            <animate attributeName="offset" values="0;1" dur="2s" repeatCount="indefinite"/>
+          <stop offset="40%" stopColor="rgba(0, 255, 0, 0)">
+            <animate
+              attributeName="offset"
+              values="0;1;0"
+              dur="5s"
+              repeatCount="indefinite"
+            />
           </stop>
         </linearGradient>
       </defs>
 
-      {/* Dark elegant background */}
-      <rect width="800" height="600" fill="#030712"/>
+      {/* Main background with animated matrix effect */}
+      <rect width="800" height="600" fill="url(#matrixBg)">
+        <animate
+          attributeName="opacity"
+          values="0.8;1;0.8"
+          dur="5s"
+          repeatCount="indefinite"
+        />
+      </rect>
 
       {/* Main certificate container */}
-      <g transform="translate(50, 30)">
-        {/* Premium paper background with animation */}
+      <g transform="translate(40, 30)">
+        {/* Background frame with animated border */}
         <rect
           x="0"
           y="0"
-          width="700"
+          width="720"
           height="540"
           rx="15"
-          fill="url(#premiumPaper)"
-          filter="url(#glass)"
-        >
-          <animate
-            attributeName="opacity"
-            values="0;1"
-            dur="1s"
-            fill="freeze"
-          />
-        </rect>
-
-        {/* Animated decorative border */}
-        <rect
-          x="10"
-          y="10"
-          width="680"
-          height="520"
-          rx="10"
-          fill="none"
-          stroke="url(#metallicGradient)"
+          fill="#000000"
+          stroke="#00ff00"
           strokeWidth="2"
-          opacity="0.7"
+          filter="url(#cyberGlow)"
         >
           <animate
             attributeName="stroke-dasharray"
-            values="0,2400;2400,0"
-            dur="3s"
-            fill="freeze"
+            values="0,2000;2000,0"
+            dur="10s"
+            repeatCount="indefinite"
           />
         </rect>
 
-        {/* Header section with shimmer */}
-        <g transform="translate(50, 40)">
-          <rect
-            x="0"
-            y="0"
-            width="600"
-            height="100"
-            rx="8"
-            fill="#1f2937"
-            filter="url(#glass)"
+        {/* Animated circuit overlay */}
+        <rect
+          x="0"
+          y="0"
+          width="720"
+          height="540"
+          rx="15"
+          fill="url(#circuitPattern)"
+          opacity="0.1"
+        >
+          <animate
+            attributeName="opacity"
+            values="0.05;0.15;0.05"
+            dur="5s"
+            repeatCount="indefinite"
           />
-          
-          {/* Animated company logo */}
-          <circle
-            cx="50"
-            cy="50"
-            r="30"
-            fill="url(#elegantGradient)"
-            filter="url(#subtleGlow)"
-          >
-            <animate
-              attributeName="r"
-              values="0;30"
-              dur="1s"
-              fill="freeze"
-            />
-          </circle>
+        </rect>
 
-          <text
-            x="120"
-            y="45"
-            fontFamily="Arial"
-            fontSize="24"
-            fontWeight="bold"
-            fill="#f9fafb"
-          >
-            Certificate of Authenticity
-            <animate
-              attributeName="opacity"
-              values="0;1"
-              dur="1.5s"
-              fill="freeze"
-            />
-          </text>
+        {/* CTF Logo and Header */}
+        <g transform="translate(50, 40)">
+          {/* Animated CTF Logo */}
+          <g>
+            <circle
+              cx="40"
+              cy="40"
+              r="35"
+              fill="none"
+              stroke="#00ff00"
+              strokeWidth="3"
+              filter="url(#cyberGlow)"
+            >
+              <animate
+                attributeName="stroke-dasharray"
+                values="0,220;220,0"
+                dur="3s"
+                repeatCount="indefinite"
+              />
+              <animateTransform
+                attributeName="transform"
+                type="rotate"
+                from="0 40 40"
+                to="360 40 40"
+                dur="10s"
+                repeatCount="indefinite"
+              />
+            </circle>
+            <text
+              x="40"
+              y="50"
+              textAnchor="middle"
+              fontFamily="Monaco, monospace"
+              fontSize="24"
+              fontWeight="bold"
+              fill="#00ff00"
+              filter="url(#cyberGlow)"
+            >
+              CTF
+            </text>
+          </g>
 
-          <text
-            x="120"
-            y="70"
-            fontFamily="Arial"
-            fontSize="14"
-            fill="#9ca3af"
-          >
-            Digital Verification System
-          </text>
+          {/* Animated Title */}
+          <g transform="translate(100, 0)">
+            <text
+              x="0"
+              y="35"
+              fontFamily="Arial"
+              fontSize="28"
+              fontWeight="bold"
+              fill="#ffffff"
+              filter="url(#cyberGlow)"
+            >
+              <tspan>DIGITAL CERTIFICATE</tspan>
+            </text>
+            <text
+              x="0"
+              y="60"
+              fontFamily="Monaco, monospace"
+              fontSize="16"
+              fill="#00ff00"
+            >
+              SECURE VERIFICATION SYSTEM
+              <animate
+                attributeName="opacity"
+                values="0.7;1;0.7"
+                dur="2s"
+                repeatCount="indefinite"
+              />
+            </text>
+          </g>
         </g>
 
-        {/* Enhanced QR Code section */}
-        <g transform="translate(500, 170)">
+        {/* Advanced QR Code Section */}
+        <g transform="translate(500, 150)">
           <rect
-            width="150"
-            height="150"
-            rx="8"
-            fill="#1f2937"
-            filter="url(#glass)"
+            width="170"
+            height="170"
+            rx="10"
+            fill="#000000"
+            stroke="#00ff00"
+            strokeWidth="2"
+            filter="url(#cyberGlow)"
           />
           
-          {/* Animated QR code */}
-          <g transform="translate(15, 15)">
-            {Array(10).fill().map((_, i) => (
-              Array(10).fill().map((_, j) => (
+          {/* Scanning animation */}
+          <rect
+            width="170"
+            height="4"
+            fill="url(#scanline)"
+          >
+            <animate
+              attributeName="y"
+              values="0;170;0"
+              dur="3s"
+              repeatCount="indefinite"
+            />
+          </rect>
+
+          {/* Dynamic QR Code elements */}
+          <g transform="translate(20, 20)">
+            {/* This would be replaced with actual QR code in production */}
+            {Array(8).fill().map((_, i) => (
+              Array(8).fill().map((_, j) => (
                 <rect
                   key={`${i}-${j}`}
-                  x={i * 12}
-                  y={j * 12}
-                  width="10"
-                  height="10"
-                  fill={Math.random() > 0.5 ? "#10b981" : "none"}
+                  x={i * 16}
+                  y={j * 16}
+                  width="14"
+                  height="14"
+                  fill={Math.random() > 0.5 ? "#00ff00" : "none"}
+                  opacity={Math.random() > 0.5 ? "1" : "0.5"}
                 >
                   <animate
                     attributeName="opacity"
-                    values="0;1"
-                    dur="0.05s"
-                    begin={`${(i + j) * 0.05}s`}
-                    fill="freeze"
+                    values="0.5;1;0.5"
+                    dur={`${1 + Math.random() * 2}s`}
+                    repeatCount="indefinite"
                   />
                 </rect>
               ))
             ))}
-            
-            {/* Enhanced scanning effect */}
-            <rect
-              width="120"
-              height="3"
-              fill="url(#elegantGradient)"
-              opacity="0.7"
-            >
-              <animate
-                attributeName="y"
-                values="0;120;0"
-                dur="2s"
-                repeatCount="indefinite"
-              />
-            </rect>
           </g>
         </g>
 
-        {/* Verification details with fade-in animation */}
-        <g transform="translate(50, 170)">
-          {["Document ID", "Issue Date", "Expiry Date", "Security Level"].map((label, i) => (
-            <g key={label} transform={`translate(0, ${i * 70})`}>
+        {/* Certificate Details with Enhanced Animation */}
+        <g transform="translate(50, 150)">
+          {[
+            {label: "CERTIFICATE ID", value: "CTF-2025-0492-8CV7"},
+            {label: "ISSUE DATE", value: "January 16, 2025"},
+            {label: "VALID UNTIL", value: "January 16, 2026"},
+            {label: "SECURITY LEVEL", value: "MAXIMUM"}
+          ].map((item, i) => (
+            <g key={item.label} transform={`translate(0, ${i * 80})`}>
               <rect
                 width="400"
-                height="60"
+                height="65"
                 rx="8"
-                fill="#1f2937"
-                filter="url(#glass)"
+                fill="#0a0a0a"
+                stroke="#00ff00"
+                strokeWidth="1"
               >
                 <animate
-                  attributeName="opacity"
-                  values="0;1"
-                  dur="0.5s"
+                  attributeName="stroke-dasharray"
+                  values="0,1000;1000,0"
+                  dur="3s"
                   begin={`${i * 0.2}s`}
                   fill="freeze"
                 />
@@ -233,48 +322,44 @@ const CertificateValidationSVG = () => {
               
               <text
                 x="20"
-                y="25"
-                fontFamily="Arial"
+                y="30"
+                fontFamily="Monaco, monospace"
                 fontSize="14"
-                fill="#9ca3af"
+                fill="#00ff00"
               >
-                {label}
+                {item.label}
               </text>
               
               <text
                 x="20"
-                y="45"
-                fontFamily="Arial"
+                y="50"
+                fontFamily="Monaco, monospace"
                 fontSize="16"
-                fontWeight="bold"
-                fill="#f9fafb"
+                fill="#ffffff"
+                filter="url(#cyberGlow)"
               >
-                {i === 0 && "DOC-2025-0492-8CV7"}
-                {i === 1 && "January 15, 2025"}
-                {i === 2 && "January 15, 2026"}
-                {i === 3 && "Level A+ (Premium)"}
+                {item.value}
+                <animate
+                  attributeName="opacity"
+                  values="0.8;1;0.8"
+                  dur="2s"
+                  repeatCount="indefinite"
+                />
               </text>
             </g>
           ))}
         </g>
 
-        {/* Enhanced validation progress */}
+        {/* Advanced Verification Status Bar */}
         <g transform="translate(50, 480)">
           <rect
-            width="600"
+            width="620"
             height="40"
             rx="20"
-            fill="#1f2937"
-            filter="url(#glass)"
-          />
-          
-          <rect
-            x="5"
-            y="5"
-            width="590"
-            height="30"
-            rx="15"
-            fill="#374151"
+            fill="#0a0a0a"
+            stroke="#00ff00"
+            strokeWidth="1"
+            filter="url(#cyberGlow)"
           />
           
           <rect
@@ -283,55 +368,50 @@ const CertificateValidationSVG = () => {
             width="0"
             height="30"
             rx="15"
-            fill="url(#elegantGradient)"
+            fill="#00ff00"
+            opacity="0.3"
           >
             <animate
               attributeName="width"
-              values="0;590"
+              values="0;610"
               dur="2s"
               fill="freeze"
             />
           </rect>
 
           <text
-            x="300"
+            x="310"
             y="25"
             textAnchor="middle"
-            fontFamily="Arial"
+            fontFamily="Monaco, monospace"
             fontSize="14"
-            fontWeight="bold"
-            fill="#f9fafb"
+            fill="#00ff00"
+            filter="url(#cyberGlow)"
           >
-            Verification Complete
+            VERIFICATION COMPLETE • AUTHENTIC
+            <animate
+              attributeName="opacity"
+              values="0.7;1;0.7"
+              dur="2s"
+              repeatCount="indefinite"
+            />
           </text>
         </g>
       </g>
 
-      {/* Enhanced verification seal */}
-      <g transform="translate(650, 50)">
-        <circle
-          r="40"
-          fill="#1f2937"
-          filter="url(#glass)"
-        >
-          <animate
-            attributeName="r"
-            values="0;40"
-            dur="1s"
-            fill="freeze"
-          />
-        </circle>
-        
+      {/* Enhanced Security Seal */}
+      <g transform="translate(700, 40)">
         <circle
           r="35"
           fill="none"
-          stroke="url(#elegantGradient)"
-          strokeWidth="3"
+          stroke="#00ff00"
+          strokeWidth="2"
+          filter="url(#cyberGlow)"
         >
           <animate
-            attributeName="stroke-dasharray"
-            values="0,220;220,0"
-            dur="2s"
+            attributeName="r"
+            values="0;35"
+            dur="1s"
             fill="freeze"
           />
           <animateTransform
@@ -346,11 +426,10 @@ const CertificateValidationSVG = () => {
         
         <path
           d="M-15,0 L-5,10 L15,-10"
-          stroke="url(#elegantGradient)"
+          stroke="#00ff00"
           strokeWidth="3"
           fill="none"
-          strokeLinecap="round"
-          strokeLinejoin="round"
+          filter="url(#cyberGlow)"
         >
           <animate
             attributeName="stroke-dasharray"
