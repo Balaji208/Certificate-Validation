@@ -1,8 +1,8 @@
 import PropTypes from "prop-types";
 
 import { toast } from "react-toastify";
-import React, { useState, useEffect } from 'react';
-import { Users, Mail, Phone, Trophy, Calendar, Shield, Timer, Award, ChevronRight, X, Pencil } from 'lucide-react';
+import  { useState } from 'react';
+import { Users, Mail, Phone, Trophy, Hash,Calendar, Shield, Timer, Award, ChevronRight, X, Pencil } from 'lucide-react';
 
 const UserTable = ({ accounts, showVerified }) => {
   const [selectedAccount, setSelectedAccount] = useState(null);
@@ -35,9 +35,11 @@ const UserTable = ({ accounts, showVerified }) => {
         [field]: value,
       };
 
-      // Reset achievement_level if certification_type is not 'achievement'
-      if (field === 'certification_type' && value !== 'achievement') {
-        newData.achievement_level = null;
+      // Clear achievement_level when certification_type is changed to 'participation'
+      if (field === 'certification_type') {
+        if (value.toLowerCase() !== 'achievement') {
+          newData.achievement_level = '';
+        }
       }
 
       return newData;
@@ -133,7 +135,7 @@ const UserTable = ({ accounts, showVerified }) => {
       key: "achievement_level",
       icon: <Trophy className="w-4 h-4 flex-shrink-0" />,
       label: "Achievement Level",
-      conditional: (data) => data.certification_type === "achievement",
+      shouldShow: (data) => data?.certification_type?.toLowerCase() === 'achievement',
     },
     {
       key: "date_of_issue",
@@ -144,8 +146,8 @@ const UserTable = ({ accounts, showVerified }) => {
       key: "validation_status",
       icon: <Shield className="w-4 h-4 flex-shrink-0" />,
       label: "Validation Status",
-      type : "select",
-      options : ["validated","pending","unlisted"]
+      type: "select",
+      options: ["validated", "pending", "unlisted"],
     },
     {
       key: "date_of_validation",
@@ -175,27 +177,27 @@ const UserTable = ({ accounts, showVerified }) => {
             <tr>
               <th className="px-6 py-4 border-b-2 border-green-600">
                 <div className="flex items-center gap-2">
+                  <Hash className="w-4 h-4" /> Unique ID
+                </div>
+              </th>
+              <th className="px-6 py-4 border-b-2 border-green-600">
+                <div className="flex items-center gap-2">
+                  <Users className="w-4 h-4" /> Name
+                </div>
+              </th>
+              <th className="px-6 py-4 border-b-2 border-green-600">
+                <div className="flex items-center gap-2">
                   <Trophy className="w-4 h-4" /> Event Name
                 </div>
               </th>
               <th className="px-6 py-4 border-b-2 border-green-600">
                 <div className="flex items-center gap-2">
-                  <Calendar className="w-4 h-4" /> Issue Date
-                </div>
-              </th>
-              <th className="px-6 py-4 border-b-2 border-green-600">
-                <div className="flex items-center gap-2">
-                  <Mail className="w-4 h-4" /> Email ID
-                </div>
-              </th>
-              <th className="px-6 py-4 border-b-2 border-green-600">
-                <div className="flex items-center gap-2">
-                  <Phone className="w-4 h-4" /> Mobile
-                </div>
-              </th>
-              <th className="px-6 py-4 border-b-2 border-green-600">
-                <div className="flex items-center gap-2">
                   <Award className="w-4 h-4" /> Certification Type
+                </div>
+              </th>
+              <th className="px-6 py-4 border-b-2 border-green-600">
+                <div className="flex items-center gap-2">
+                  <Shield className="w-4 h-4" /> Validation Status
                 </div>
               </th>
             </tr>
@@ -210,14 +212,14 @@ const UserTable = ({ accounts, showVerified }) => {
                     onClick={() => handleRowClick(account)}
                   >
                     <td className="px-6 py-4 font-medium text-green-300 flex items-center gap-2">
-                      {account.event}
+                      {account.unique_id}
                       <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
                     </td>
-                    <td className="px-6 py-4">{account.date_of_issue}</td>
-                    <td className="px-6 py-4">{account.email}</td>
-                    <td className="px-6 py-4">{account.mobile}</td>
+                    <td className="px-6 py-4">{account.name}</td>
+                    <td className="px-6 py-4">{account.event}</td>
+                    <td className="px-6 py-4">{account.certification_type}</td>
                     <td className="px-6 py-4 text-green-400 font-semibold">
-                      {account.certification_type}
+                      {account.validation_status}
                     </td>
                   </tr>
                 )
@@ -227,12 +229,11 @@ const UserTable = ({ accounts, showVerified }) => {
       </div>
 
       {isModalOpen && selectedAccount && (
-        <div className="fixed inset-0 flex justify-center items-center bg-zinc-900/80 backdrop-blur-sm p-4">
+        <div className="fixed inset-0 flex justify-center bg-zinc-900/80 backdrop-blur-sm p-4 items-start pt-20">
           <div className="bg-gradient-to-b from-zinc-900 to-zinc-950 p-4 sm:p-8 rounded-2xl shadow-2xl 
                        w-full sm:w-[90%] md:w-[70%] lg:w-1/2 
-                       max-h-[90vh] sm:max-h-[80vh] 
-                       overflow-auto border border-zinc-800 
-                       custom-scrollbar relative">
+                       max-h-[80vh] overflow-auto border border-zinc-800 
+                       custom-scrollbar relative animate-slideDown">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-xl sm:text-2xl font-bold text-green-400 flex items-center gap-2">
                 <Shield className="w-5 h-5 sm:w-6 sm:h-6" />
@@ -271,30 +272,30 @@ const UserTable = ({ accounts, showVerified }) => {
 
             <form onSubmit={handleSubmit}>
               <ul className="space-y-3 sm:space-y-4 text-zinc-300 text-sm sm:text-base">
-                {fields.map(({ key, icon, label, readOnly, type, options, conditional, alwaysShow }) => {
-                  // Skip conditional fields if condition is not met and not alwaysShow
-                  if (conditional && !conditional(editedData) && !alwaysShow) {
+                {fields.map((field) => {
+                  // Check if the field should be shown
+                  if (field.shouldShow && !field.shouldShow(editedData)) {
                     return null;
                   }
 
                   return (
-                    <li key={label} className="flex gap-2">
-                      <div className="mt-1">{icon}</div>
+                    <li key={field.label} className="flex gap-2">
+                      <div className="mt-1">{field.icon}</div>
                       <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 flex-grow">
                         <strong className="text-green-400 whitespace-nowrap">
-                          {label}:
+                          {field.label}:
                         </strong>
-                        {isEditing && !readOnly ? (
-                          type === 'select' ? (
+                        {isEditing && !field.readOnly ? (
+                          field.type === 'select' ? (
                             <div className="relative w-full sm:w-auto flex-grow">
                               <select
-                                value={editedData[key]}
-                                onChange={(e) => handleInputChange(key, e.target.value)}
+                                value={editedData[field.key]}
+                                onChange={(e) => handleInputChange(field.key, e.target.value)}
                                 className="appearance-none w-full bg-zinc-800 text-white px-2 py-1 rounded-lg 
                                          border border-zinc-700 focus:border-green-500 
                                          outline-none pr-8"
                               >
-                                {options.map((option) => (
+                                {field.options.map((option) => (
                                   <option key={option} value={option}>
                                     {option}
                                   </option>
@@ -307,21 +308,20 @@ const UserTable = ({ accounts, showVerified }) => {
                           ) : (
                             <input
                               type="text"
-                              value={editedData[key] || ''}
-                              onChange={(e) => handleInputChange(key, e.target.value)}
+                              value={editedData[field.key] || ''}
+                              onChange={(e) => handleInputChange(field.key, e.target.value)}
                               className="w-full sm:w-auto bg-zinc-800 text-white px-2 py-1 rounded-lg 
                                        border border-zinc-700 focus:border-green-500 
                                        outline-none flex-grow"
-                              readOnly={readOnly}
                             />
                           )
                         ) : (
                           <span className="break-words">
-                            {key === "validation_status"
-                              ? editedData[key]
+                            {field.key === "validation_status"
+                              ? editedData[field.key]
                                 ? "Verified"
                                 : "Not Verified"
-                              : editedData[key] || ''}
+                              : editedData[field.key] || ''}
                           </span>
                         )}
                       </div>

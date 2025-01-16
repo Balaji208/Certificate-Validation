@@ -258,30 +258,25 @@ const NewUserModal = ({ isOpen, closeModal }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 overflow-hidden">
-      <div
-        className="absolute inset-0 bg-black/60 backdrop-blur-sm animate-fadeIn"
-        onClick={closeModal}
-      />
-      <div className="fixed inset-0 overflow-y-auto">
-        <div className="flex min-h-full items-center justify-center p-4">
-          <div className="relative w-full max-w-2xl animate-slideInUp">
-            <div className="bg-gradient-to-b from-zinc-900 to-zinc-950 rounded-xl shadow-2xl border border-zinc-800/50">
-              <div className="sticky top-0 z-10 bg-gradient-to-b from-zinc-900 to-zinc-900/95 border-b border-zinc-800/50 rounded-t-xl p-6">
-                <h2 className="text-3xl font-bold text-center bg-gradient-to-r from-emerald-400 to-emerald-600 bg-clip-text text-transparent flex items-center justify-center gap-3 antialiased">
-                  <Award className="animate-bounce text-emerald-400" size={28} />
-                  Add New Certification
-                </h2>
-                <button
-                  type="button"
-                  onClick={closeModal}
-                  className="absolute top-2 right-2 text-emerald-400 hover:text-emerald-600"
-                >
-                  <X size={24} />
-                </button>
-              </div>
+    <div className="fixed inset-0 overflow-y-auto">
+    <div className="flex justify-center p-4 pt-20"> {/* Changed min-h-full and items-center to pt-20 */}
+      <div className="relative w-full max-w-2xl animate-slideInFromTop"> {/* Changed animation class */}
+        <div className="bg-gradient-to-b from-zinc-900 to-zinc-950 rounded-xl shadow-2xl border border-zinc-800/50">
+          <div className="sticky top-0 z-10 bg-gradient-to-b from-zinc-900 to-zinc-900/95 border-b border-zinc-800/50 rounded-t-xl p-6">
+            <h2 className="text-3xl font-bold text-center bg-gradient-to-r from-emerald-400 to-emerald-600 bg-clip-text text-transparent flex items-center justify-center gap-3 antialiased">
+              <Award className="animate-bounce text-emerald-400" size={28} />
+              Add New Certification
+            </h2>
+            <button
+              type="button"
+              onClick={closeModal}
+              className="absolute top-2 right-2 text-emerald-400 hover:text-emerald-600"
+            >
+              <X size={24} />
+            </button>
+          </div>
 
-              <div className="max-h-[calc(100vh-8rem)] overflow-y-auto scrollbar-thin scrollbar-track-zinc-900 scrollbar-thumb-zinc-700 hover:scrollbar-thumb-zinc-600">
+          <div className="max-h-[calc(100vh-12rem)] overflow-y-auto scrollbar-thin scrollbar-track-zinc-900 scrollbar-thumb-zinc-700 hover:scrollbar-thumb-zinc-600">
                 <div className="p-6 sm:p-8 pt-4">
                   <form onSubmit={handleSubmit} className="space-y-6">
                     {getFormFields().map((field, index) => (
@@ -394,7 +389,7 @@ const NewUserModal = ({ isOpen, closeModal }) => {
           </div>
         </div>
       </div>
-    </div>
+    
   );
 };
 
