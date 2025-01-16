@@ -140,6 +140,7 @@ const UserTable = ({ accounts, showVerified }) => {
     {
       key: "date_of_issue",
       icon: <Calendar className="w-4 h-4 flex-shrink-0" />,
+      type :"date",
       label: "Issue Date",
     },
     {
@@ -307,7 +308,7 @@ const UserTable = ({ accounts, showVerified }) => {
                             </div>
                           ) : (
                             <input
-                              type="text"
+                              type = {field.type} 
                               value={editedData[field.key] || ''}
                               onChange={(e) => handleInputChange(field.key, e.target.value)}
                               className="w-full sm:w-auto bg-zinc-800 text-white px-2 py-1 rounded-lg 

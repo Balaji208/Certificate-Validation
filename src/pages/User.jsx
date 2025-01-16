@@ -164,7 +164,7 @@ const User = () => {
       >
         {/* Left Section: Image */}
         <div className="mt-8 w-full sm:w-3/4 md:w-3/4 h-auto">
-          <CertificateValidationSVG className="h-auto w-full"/>
+       
         </div>
 
         {/* Right Section */}
