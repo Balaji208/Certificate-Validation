@@ -1,15 +1,30 @@
 import PropTypes from "prop-types";
 
 import { toast } from "react-toastify";
-import  { useState } from 'react';
-import { Users, Mail, Phone, Trophy, Hash,Calendar, Shield, Timer, Award, ChevronRight, X, Pencil } from 'lucide-react';
+import { useState } from "react";
+import {
+  Users,
+  Mail,
+  Phone,
+  Trophy,
+  Hash,
+  Calendar,
+  Shield,
+  Timer,
+  Award,
+  ChevronRight,
+  X,
+  Pencil,
+  Loader2,
+  Save
+} from "lucide-react";
 
 const UserTable = ({ accounts, showVerified }) => {
   const [selectedAccount, setSelectedAccount] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editedData, setEditedData] = useState(null);
-
+  const [isLoading, setIsLoading] = useState(false);
   const filteredAccounts = accounts.filter(
     (account) => account.validation_status === showVerified
   );
@@ -36,9 +51,9 @@ const UserTable = ({ accounts, showVerified }) => {
       };
 
       // Clear achievement_level when certification_type is changed to 'participation'
-      if (field === 'certification_type') {
-        if (value.toLowerCase() !== 'achievement') {
-          newData.achievement_level = '';
+      if (field === "certification_type") {
+        if (value.toLowerCase() !== "achievement") {
+          newData.achievement_level = "";
         }
       }
 
@@ -73,27 +88,27 @@ const UserTable = ({ accounts, showVerified }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
 
     try {
-      const loadingToastId = toast.loading("Updating account...", {
-        className: "toast-success-custom",
-      });
-
+     
       const updatedAccount = await updateAccount(editedData);
+
+      // Update local state
       setSelectedAccount(updatedAccount);
       setEditedData(updatedAccount);
       setIsEditing(false);
-      updateAccount(updatedAccount);
 
-      toast.success("Account updated successfully!", {
-        id: loadingToastId,
-        className: "toast-success-custom",
-      });
+      // Call the parent update handler
+
+      
     } catch (error) {
-      toast.error("Failed to update account", {
-        className: "toast-error-custom",
-      });
       console.error("Error updating account:", error);
+      toast.error("Failed to update account. Please try again.", {
+        autoClose: 3000,
+      });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -135,12 +150,13 @@ const UserTable = ({ accounts, showVerified }) => {
       key: "achievement_level",
       icon: <Trophy className="w-4 h-4 flex-shrink-0" />,
       label: "Achievement Level",
-      shouldShow: (data) => data?.certification_type?.toLowerCase() === 'achievement',
+      shouldShow: (data) =>
+        data?.certification_type?.toLowerCase() === "achievement",
     },
     {
       key: "date_of_issue",
       icon: <Calendar className="w-4 h-4 flex-shrink-0" />,
-      type :"date",
+      type: "date",
       label: "Issue Date",
     },
     {
@@ -231,10 +247,12 @@ const UserTable = ({ accounts, showVerified }) => {
 
       {isModalOpen && selectedAccount && (
         <div className="fixed inset-0 flex justify-center bg-zinc-900/80 backdrop-blur-sm p-4 items-start pt-20">
-          <div className="bg-gradient-to-b from-zinc-900 to-zinc-950 p-4 sm:p-8 rounded-2xl shadow-2xl 
+          <div
+            className="bg-gradient-to-b from-zinc-900 to-zinc-950 p-4 sm:p-8 rounded-2xl shadow-2xl 
                        w-full sm:w-[90%] md:w-[70%] lg:w-1/2 
                        max-h-[80vh] overflow-auto border border-zinc-800 
-                       custom-scrollbar relative animate-slideDown">
+                       custom-scrollbar relative animate-slideDown"
+          >
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-xl sm:text-2xl font-bold text-green-400 flex items-center gap-2">
                 <Shield className="w-5 h-5 sm:w-6 sm:h-6" />
@@ -287,11 +305,13 @@ const UserTable = ({ accounts, showVerified }) => {
                           {field.label}:
                         </strong>
                         {isEditing && !field.readOnly ? (
-                          field.type === 'select' ? (
+                          field.type === "select" ? (
                             <div className="relative w-full sm:w-auto flex-grow">
                               <select
                                 value={editedData[field.key]}
-                                onChange={(e) => handleInputChange(field.key, e.target.value)}
+                                onChange={(e) =>
+                                  handleInputChange(field.key, e.target.value)
+                                }
                                 className="appearance-none w-full bg-zinc-800 text-white px-2 py-1 rounded-lg 
                                          border border-zinc-700 focus:border-green-500 
                                          outline-none pr-8"
@@ -308,9 +328,11 @@ const UserTable = ({ accounts, showVerified }) => {
                             </div>
                           ) : (
                             <input
-                              type = {field.type} 
-                              value={editedData[field.key] || ''}
-                              onChange={(e) => handleInputChange(field.key, e.target.value)}
+                              type={field.type}
+                              value={editedData[field.key] || ""}
+                              onChange={(e) =>
+                                handleInputChange(field.key, e.target.value)
+                              }
                               className="w-full sm:w-auto bg-zinc-800 text-white px-2 py-1 rounded-lg 
                                        border border-zinc-700 focus:border-green-500 
                                        outline-none flex-grow"
@@ -322,7 +344,7 @@ const UserTable = ({ accounts, showVerified }) => {
                               ? editedData[field.key]
                                 ? "Verified"
                                 : "Not Verified"
-                              : editedData[field.key] || ''}
+                              : editedData[field.key] || ""}
                           </span>
                         )}
                       </div>
@@ -335,10 +357,43 @@ const UserTable = ({ accounts, showVerified }) => {
                 <div className="mt-6 flex justify-end gap-3">
                   <button
                     type="submit"
-                    className="px-4 py-2 rounded-lg bg-green-600 hover:bg-green-700 
-                             text-white transition-colors"
+                    disabled={isLoading}
+                    className="px-4 py-2 rounded-lg 
+           text-white transition-colors disabled:opacity-50 
+           disabled:cursor-not-allowed flex items-center gap-2"
                   >
-                    Save Changes
+                     {isEditing && (
+    <div className="mt-6 flex justify-end gap-3">
+      <button
+        type="button"
+        onClick={() => setIsEditing(false)}
+        disabled={isLoading}
+        className="px-4 py-2 rounded-lg bg-zinc-600 hover:bg-zinc-700 
+                 text-white transition-colors disabled:opacity-50"
+      >
+        Cancel
+      </button>
+      <button
+        type="submit"
+        disabled={isLoading}
+        className="px-4 py-2 rounded-lg bg-green-600 hover:bg-green-700 
+                 text-white transition-colors disabled:opacity-50 
+                 disabled:cursor-not-allowed flex items-center gap-2"
+      >
+        {isLoading ? (
+          <>
+            <Loader2 className="w-5 h-5 animate-spin" />
+            <span>Saving...</span>
+          </>
+        ) : (
+          <>
+            <Save className="w-5 h-5" />
+            <span>Save Changes</span>
+          </>
+        )}
+      </button>
+    </div>
+  )}
                   </button>
                 </div>
               )}
@@ -349,7 +404,6 @@ const UserTable = ({ accounts, showVerified }) => {
     </div>
   );
 };
-
 
 UserTable.propTypes = {
   accounts: PropTypes.arrayOf(
