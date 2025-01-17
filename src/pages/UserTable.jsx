@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 
 import { toast } from "react-toastify";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Users,
   Mail,
@@ -25,10 +25,30 @@ const UserTable = ({ accounts, showVerified }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedData, setEditedData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+ 
   const filteredAccounts = accounts.filter(
     (account) => account.validation_status === showVerified
   );
-
+  // Save scroll position when opening modal
+ 
+  const [scrollPosition, setScrollPosition] = useState(0);
+  // Lock body scroll when modal is open
+  useEffect(() => {
+    if (isModalOpen) {
+      document.body.style.overflow = 'hidden';
+      document.body.style.position = 'fixed';
+      document.body.style.width = '100%';
+      document.body.style.top = `-${scrollPosition}px`;
+    } else {
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
+      document.body.style.top = '';
+      // Restore scroll position
+      window.scrollTo(0, scrollPosition);
+    }
+  }, [isModalOpen, scrollPosition]);
+  
   const handleRowClick = (account) => {
     setSelectedAccount(account);
     setEditedData(account);
@@ -246,13 +266,18 @@ const UserTable = ({ accounts, showVerified }) => {
       </div>
 
       {isModalOpen && selectedAccount && (
-        <div className="fixed inset-0 flex justify-center bg-zinc-900/80 backdrop-blur-sm p-4 items-start pt-20">
-          <div
-            className="bg-gradient-to-b from-zinc-900 to-zinc-950 p-4 sm:p-8 rounded-2xl shadow-2xl 
+        <div 
+        className="fixed inset-0 flex items-center justify-center bg-zinc-900/80 backdrop-blur-sm p-4"
+        style={{
+          top: `${scrollPosition}px`,
+          height: '100vh'
+        }}
+      >
+        <div className="bg-gradient-to-b from-zinc-900 to-zinc-950 p-4 sm:p-8 rounded-2xl shadow-2xl 
                        w-full sm:w-[90%] md:w-[70%] lg:w-1/2 
-                       max-h-[80vh] overflow-auto border border-zinc-800 
-                       custom-scrollbar relative animate-slideDown"
-          >
+                       max-h-[90vh] overflow-auto border border-zinc-800 
+                       custom-scrollbar relative animate-slideDown
+                       transform -translate-y-1/2 top-1/2">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-xl sm:text-2xl font-bold text-green-400 flex items-center gap-2">
                 <Shield className="w-5 h-5 sm:w-6 sm:h-6" />

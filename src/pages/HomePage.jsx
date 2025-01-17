@@ -332,50 +332,57 @@ const HomePage = () => {
           />
         )}
 
-        {showGenerateModal && (
-          <div
-            className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm 
-                        flex items-center justify-center z-50 animate-fadeIn p-4"
+{showGenerateModal && (
+  <div 
+    className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-50 
+               animate-fadeIn p-4 overflow-auto"
+    style={{
+      position: 'fixed',
+      top: `${window.scrollY}px`,
+      height: '100vh'
+    }}
+  >
+    <div className="min-h-screen flex items-center justify-center">
+      <div
+        className="bg-gray-950 rounded-lg shadow-lg p-5 w-full max-w-sm 
+                   transform transition-all duration-300 animate-slideIn"
+      >
+        <h3 className="text-lg font-bold mb-4 text-green-400 flex items-center gap-2">
+          <Key className="animate-pulse" />
+          Generate Unique IDs
+        </h3>
+        <input
+          type="number"
+          className="w-full px-3 py-2 border rounded-lg mb-4 bg-gray-800
+                     border-green-500/30 focus:border-green-500/50
+                     transform transition-all duration-300 focus:scale-102
+                     text-green-400 placeholder-green-400/50"
+          placeholder="Enter number of IDs to generate"
+          value={count}
+          onChange={(e) => setCount(e.target.value)}
+        />
+        <div className="flex flex-col sm:flex-row gap-3">
+          <button
+            onClick={() => setShowGenerateModal(false)}
+            className="w-full px-3 py-2 bg-black/30 backdrop-blur-sm border border-green-500/30 
+                     text-green-400 font-medium hover:border-green-500/50 rounded-lg
+                     transform transition-all duration-300 hover:scale-105 active:scale-95"
           >
-            <div
-              className="bg-gray-950 rounded-lg shadow-lg p-5 w-full max-w-sm 
-                          transform transition-all duration-300 animate-slideIn"
-            >
-              <h3 className="text-lg font-bold mb-4 text-green-400 flex items-center gap-2">
-                <Key className="animate-pulse" />
-                Generate Unique IDs
-              </h3>
-              <input
-                type="number"
-                className="w-full px-3 py-2 border rounded-lg mb-4 bg-gray-800
-                         border-green-500/30 focus:border-green-500/50
-                         transform transition-all duration-300 focus:scale-102
-                         text-green-400 placeholder-green-400/50"
-                placeholder="Enter number of IDs to generate"
-                value={count}
-                onChange={(e) => setCount(e.target.value)}
-              />
-              <div className="flex flex-col sm:flex-row gap-3">
-                <button
-                  onClick={() => setShowGenerateModal(false)}
-                  className="w-full px-3 py-2 bg-black/30 backdrop-blur-sm border border-green-500/30 
-                           text-green-400 font-medium hover:border-green-500/50 rounded-lg
-                           transform transition-all duration-300 hover:scale-105 active:scale-95"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={handleGenerate}
-                  className="w-full px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700
-                           transform transition-all duration-300 hover:scale-105 active:scale-95
-                           shadow-lg shadow-green-600/20"
-                >
-                  Generate
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
+            Cancel
+          </button>
+          <button
+            onClick={handleGenerate}
+            className="w-full px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700
+                     transform transition-all duration-300 hover:scale-105 active:scale-95
+                     shadow-lg shadow-green-600/20"
+          >
+            Generate
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+)}
 
         {/* User Table with pagination */}
         <div className="animate-fadeIn">
